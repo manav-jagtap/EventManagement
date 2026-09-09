@@ -19,7 +19,7 @@
             <p class="text-muted">Organized by {{ event.organizer.get_full_name|default:event.organizer.username }}</p>
 
             <h4 class="fw-bold mt-4">About this event</h4>
-            <p class="text-muted">{{ event.description|linebreaks }}</p>
+            <div class="text-muted">{{ event.description|linebreaks }}</div>
 
             <h4 class="fw-bold mt-4">Venue</h4>
             <p>{{ event.venue }}<br>{{ event.address }}<br>{{ event.city }}</p>
@@ -36,15 +36,25 @@
                 <p>📅 <strong>Starts</strong><br>{{ event.start_at|date:"d M Y, h:i A" }}</p>
                 <p>⏰ <strong>Ends</strong><br>{{ event.end_at|date:"d M Y, h:i A" }}</p>
                 <p>📍 <strong>Location</strong><br>{{ event.city }}</p>
-                <p>💺 <strong>Total Seats</strong><br>{{ event.seat_limit }}</p>
+                <p>💺 <strong>Available Seats</strong><br>{{ available_seats }} / {{ event.seat_limit }}</p>
 
-                {% if user.is_authenticated %}
-                    {% if user.role == "attendee" %}
-                        <button class="btn btn-primary w-100" disabled>
-                            Registration Coming Next
-                        </button>
+                {% if user_registration %}
+                    {% if user_registration.status == "confirmed" %}
+                        <div class="alert alert-success">Your seat is confirmed.</div>
+                    {% else %}
+                        <div class="alert alert-info">You are on the waitlist.</div>
                     {% endif %}
-                {% else %}
+                    <a href="{% url 'my_bookings' %}" class="btn btn-outline-primary w-100">
+                        View My Bookings
+                    </a>
+                {% elif user.is_authenticated and user.role == "attendee" %}
+                    <form method="post" action="{% url 'register_event' event.pk %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary w-100">
+                            {% if available_seats > 0 %}Register Now{% else %}Join Waitlist{% endif %}
+                        </button>
+                    </form>
+                {% elif not user.is_authenticated %}
                     <a href="{% url 'login' %}" class="btn btn-primary w-100">
                         Login to Register
                     </a>

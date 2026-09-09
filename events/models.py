@@ -76,17 +76,27 @@ class Event(models.Model):
 
     def clean(self):
         super().clean()
+        errors = {}
 
         if self.start_at and self.end_at and self.end_at <= self.start_at:
-            raise ValidationError({
-                "end_at": "End date and time must be after the start."
-            })
+            errors["end_at"] = "End date and time must be after the start."
 
-        if self.start_at and self.start_at < timezone.now():
-            if not self.pk:
-                raise ValidationError({
-                    "start_at": "A new event cannot start in the past."
-                })
+        if self.start_at and not self.pk and self.start_at <= timezone.now():
+            errors["start_at"] = "A new event must start in the future."
+
+        if self.pk and self.seat_limit is not None:
+            confirmed = self.registrations.filter(
+                status="confirmed"
+            ).count()
+
+            if self.seat_limit < confirmed:
+                errors["seat_limit"] = (
+                    f"Seat limit cannot be less than {confirmed} "
+                    "confirmed bookings."
+                )
+
+        if errors:
+            raise ValidationError(errors)
 
     @property
     def is_free(self):

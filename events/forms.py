@@ -1,5 +1,4 @@
 from django import forms
-from django.utils import timezone
 
 from .models import Event
 
@@ -36,20 +35,12 @@ class EventForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["start_at"].input_formats = ["%Y-%m-%dT%H:%M"]
-        self.fields["end_at"].input_formats = ["%Y-%m-%dT%H:%M"]
+
+        for name in ("start_at", "end_at"):
+            self.fields[name].input_formats = ["%Y-%m-%dT%H:%M"]
 
         for field in self.fields.values():
-            if isinstance(field.widget, forms.CheckboxInput):
-                field.widget.attrs["class"] = "form-check-input"
-            else:
-                field.widget.attrs["class"] = "form-control"
+            field.widget.attrs["class"] = "form-control"
 
         self.fields["category"].widget.attrs["class"] = "form-select"
         self.fields["status"].widget.attrs["class"] = "form-select"
-
-    def clean_start_at(self):
-        start_at = self.cleaned_data["start_at"]
-        if not self.instance.pk and start_at < timezone.now():
-            raise forms.ValidationError("Start date cannot be in the past.")
-        return start_at
