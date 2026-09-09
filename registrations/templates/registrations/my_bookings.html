@@ -1,0 +1,47 @@
+{% extends "accounts/base.html" %}
+
+{% block title %}My Bookings | EventHub{% endblock %}
+
+{% block content %}
+<div class="py-4">
+    <h1 class="fw-bold">My Bookings</h1>
+    <p class="text-muted mb-4">Manage your event registrations.</p>
+
+    <div class="row g-4">
+        {% for registration in registrations %}
+            <div class="col-md-6">
+                <div class="card dashboard-card h-100">
+                    <div class="card-body p-4">
+                        <span class="badge {% if registration.status == 'confirmed' %}bg-success{% elif registration.status == 'waitlisted' %}bg-warning text-dark{% else %}bg-secondary{% endif %}">
+                            {{ registration.get_status_display }}
+                        </span>
+
+                        <h4 class="fw-bold mt-3">{{ registration.event.title }}</h4>
+                        <p class="text-muted mb-2">📅 {{ registration.event.start_at|date:"d M Y, h:i A" }}</p>
+                        <p class="text-muted">📍 {{ registration.event.city }}</p>
+
+                        <a href="{% url 'event_detail' registration.event.slug %}" class="btn btn-outline-primary btn-sm">
+                            Event Details
+                        </a>
+
+                        {% if registration.status != "cancelled" and not registration.checked_in_at %}
+                            <form method="post" action="{% url 'cancel_booking' registration.pk %}" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-danger btn-sm"
+                                        onclick="return confirm('Cancel this registration?')">
+                                    Cancel
+                                </button>
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12 text-center py-5">
+                <h4>No bookings yet</h4>
+                <a href="{% url 'event_list' %}" class="btn btn-primary mt-2">Explore Events</a>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

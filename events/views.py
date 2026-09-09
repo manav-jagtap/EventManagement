@@ -1,6 +1,9 @@
+from functools import wraps
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
+from django.db import transaction
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
@@ -12,6 +15,7 @@ from .models import Category, Event
 
 
 def organizer_required(view_func):
+    @wraps(view_func)
     @login_required
     def wrapper(request, *args, **kwargs):
         if not (
@@ -64,7 +68,23 @@ def event_detail(request, slug):
         ):
             raise PermissionDenied
 
-    return render(request, "events/event_detail.html", {"event": event})
+    confirmed_count = event.registrations.filter(
+        status="confirmed"
+    ).count()
+    available_seats = max(event.seat_limit - confirmed_count, 0)
+
+    user_registration = None
+    if request.user.is_authenticated:
+        user_registration = event.registrations.filter(
+            user=request.user,
+            status__in=["confirmed", "waitlisted"],
+        ).first()
+
+    return render(request, "events/event_detail.html", {
+        "event": event,
+        "available_seats": available_seats,
+        "user_registration": user_registration,
+    })
 
 
 @organizer_required
@@ -110,17 +130,31 @@ def event_create(request):
 
 @organizer_required
 def event_update(request, pk):
-    event = get_object_or_404(Event, pk=pk, organizer=request.user)
-    form = EventForm(
-        request.POST or None,
-        request.FILES or None,
-        instance=event,
-    )
+    if request.method == "POST":
+        with transaction.atomic():
+            event = get_object_or_404(
+                Event.objects.select_for_update(),
+                pk=pk,
+                organizer=request.user,
+            )
 
-    if request.method == "POST" and form.is_valid():
-        form.save()
-        messages.success(request, "Event updated successfully.")
-        return redirect("my_events")
+            form = EventForm(
+                request.POST,
+                request.FILES,
+                instance=event,
+            )
+
+            if form.is_valid():
+                form.save()
+                messages.success(request, "Event updated successfully.")
+                return redirect("my_events")
+    else:
+        event = get_object_or_404(
+            Event,
+            pk=pk,
+            organizer=request.user,
+        )
+        form = EventForm(instance=event)
 
     return render(request, "events/event_form.html", {
         "form": form,
@@ -131,9 +165,21 @@ def event_update(request, pk):
 
 @organizer_required
 def event_delete(request, pk):
-    event = get_object_or_404(Event, pk=pk, organizer=request.user)
+    event = get_object_or_404(
+        Event,
+        pk=pk,
+        organizer=request.user,
+    )
 
     if request.method == "POST":
+        if event.registrations.exists():
+            messages.error(
+                request,
+                "This event has registrations and cannot be deleted. "
+                "Change its status to Cancelled instead."
+            )
+            return redirect("my_events")
+
         event.delete()
         messages.success(request, "Event deleted successfully.")
         return redirect("my_events")
