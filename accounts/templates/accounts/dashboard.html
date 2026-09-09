@@ -4,69 +4,47 @@
 
 {% block content %}
 <div class="py-4">
-    <p class="text-uppercase text-primary fw-semibold small mb-2">
-        Your workspace
-    </p>
-
-    <h1 class="fw-bold mb-2">
-        Welcome, {{ user.first_name|default:user.username }} 👋
-    </h1>
-
-    <p class="text-muted mb-4">
-        {% if user.is_superuser or user.role == "admin" %}
-            Manage your platform and keep every event running smoothly.
-        {% elif user.role == "organizer" %}
-            Create events, manage registrations, and track your attendees.
-        {% else %}
-            Discover events, manage your bookings, and access your tickets.
-        {% endif %}
-    </p>
+    <p class="text-uppercase text-primary fw-semibold small mb-2">Your workspace</p>
+    <h1 class="fw-bold mb-2">Welcome, {{ user.first_name|default:user.username }} 👋</h1>
 
     {% if user.is_superuser or user.role == "admin" %}
+        <p class="text-muted mb-4">Manage your platform and keep every event running smoothly.</p>
         <div class="row g-4">
             <div class="col-md-6">
                 <div class="card dashboard-card h-100">
                     <div class="card-body p-4">
                         <div class="fs-2 mb-3">🛡️</div>
                         <h5 class="fw-bold">Admin Panel</h5>
-                        <p class="text-muted">
-                            Manage users, organizers, and platform data.
-                        </p>
-                        <a href="{% url 'admin:index' %}" class="btn btn-primary">
-                            Open Admin
-                        </a>
+                        <p class="text-muted">Manage users, organizers, and platform data.</p>
+                        <a href="{% url 'admin:index' %}" class="btn btn-primary">Open Admin</a>
                     </div>
                 </div>
             </div>
         </div>
-
     {% elif user.role == "organizer" %}
+        <p class="text-muted mb-4">Create events, manage registrations, and track your attendees.</p>
         <div class="row g-4">
             <div class="col-md-6">
                 <div class="card dashboard-card h-100">
                     <div class="card-body p-4">
                         <div class="fs-2 mb-3">📅</div>
                         <h5 class="fw-bold">My Events</h5>
-                        <p class="text-muted">
-                            Create and manage your upcoming events.
-                        </p>
-                        <span class="badge bg-secondary">Coming next</span>
+                        <p class="text-muted">Create and manage your upcoming events.</p>
+                        <a href="{% url 'my_events' %}" class="btn btn-primary">Manage Events</a>
                     </div>
                 </div>
             </div>
         </div>
-
     {% else %}
+        <p class="text-muted mb-4">Discover events, manage your bookings, and access your tickets.</p>
         <div class="row g-4">
             <div class="col-md-6">
                 <div class="card dashboard-card h-100">
                     <div class="card-body p-4">
                         <div class="fs-2 mb-3">🎟️</div>
                         <h5 class="fw-bold">Explore Events</h5>
-                        <p class="text-muted">
-                            Find events and reserve your seat.
-                        </p>
-                        <span class="badge bg-secondary">Coming next</span>
+                        <p class="text-muted">Find events and reserve your seat.</p>
+                        <a href="{% url 'event_list' %}" class="btn btn-primary">Explore Events</a>
                     </div>
                 </div>
             </div>

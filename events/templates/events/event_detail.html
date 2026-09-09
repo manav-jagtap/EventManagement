@@ -1,0 +1,56 @@
+{% extends "accounts/base.html" %}
+
+{% block title %}{{ event.title }} | EventHub{% endblock %}
+
+{% block content %}
+<div class="row g-4 py-4">
+    <div class="col-lg-8">
+        {% if event.banner %}
+            <img src="{{ event.banner.url }}" alt="{{ event.title }}"
+                 class="img-fluid rounded-4 w-100" style="max-height: 420px; object-fit: cover;">
+        {% else %}
+            <div class="bg-light rounded-4 d-flex align-items-center justify-content-center"
+                 style="height: 300px; font-size: 5rem;">🎟️</div>
+        {% endif %}
+
+        <div class="mt-4">
+            <span class="badge bg-primary">{{ event.category.name }}</span>
+            <h1 class="fw-bold mt-3">{{ event.title }}</h1>
+            <p class="text-muted">Organized by {{ event.organizer.get_full_name|default:event.organizer.username }}</p>
+
+            <h4 class="fw-bold mt-4">About this event</h4>
+            <p class="text-muted">{{ event.description|linebreaks }}</p>
+
+            <h4 class="fw-bold mt-4">Venue</h4>
+            <p>{{ event.venue }}<br>{{ event.address }}<br>{{ event.city }}</p>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card dashboard-card">
+            <div class="card-body p-4">
+                <h4 class="fw-bold mb-3">
+                    {% if event.is_free %}Free{% else %}₹{{ event.price }}{% endif %}
+                </h4>
+                <hr>
+                <p>📅 <strong>Starts</strong><br>{{ event.start_at|date:"d M Y, h:i A" }}</p>
+                <p>⏰ <strong>Ends</strong><br>{{ event.end_at|date:"d M Y, h:i A" }}</p>
+                <p>📍 <strong>Location</strong><br>{{ event.city }}</p>
+                <p>💺 <strong>Total Seats</strong><br>{{ event.seat_limit }}</p>
+
+                {% if user.is_authenticated %}
+                    {% if user.role == "attendee" %}
+                        <button class="btn btn-primary w-100" disabled>
+                            Registration Coming Next
+                        </button>
+                    {% endif %}
+                {% else %}
+                    <a href="{% url 'login' %}" class="btn btn-primary w-100">
+                        Login to Register
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
