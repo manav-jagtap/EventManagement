@@ -5,41 +5,84 @@
 {% block content %}
 <div class="py-4">
     <h1 class="fw-bold">My Bookings</h1>
-    <p class="text-muted mb-4">Manage your event registrations.</p>
+    <p class="text-muted mb-4">
+        Manage your event registrations and tickets.
+    </p>
 
     <div class="row g-4">
         {% for registration in registrations %}
             <div class="col-md-6">
                 <div class="card dashboard-card h-100">
                     <div class="card-body p-4">
-                        <span class="badge {% if registration.status == 'confirmed' %}bg-success{% elif registration.status == 'waitlisted' %}bg-warning text-dark{% else %}bg-secondary{% endif %}">
+
+                        <span class="badge
+                            {% if registration.status == 'confirmed' %}
+                                bg-success
+                            {% elif registration.status == 'waitlisted' %}
+                                bg-warning text-dark
+                            {% else %}
+                                bg-secondary
+                            {% endif %}">
                             {{ registration.get_status_display }}
                         </span>
 
-                        <h4 class="fw-bold mt-3">{{ registration.event.title }}</h4>
-                        <p class="text-muted mb-2">📅 {{ registration.event.start_at|date:"d M Y, h:i A" }}</p>
-                        <p class="text-muted">📍 {{ registration.event.city }}</p>
+                        <h4 class="fw-bold mt-3">
+                            {{ registration.event.title }}
+                        </h4>
 
-                        <a href="{% url 'event_detail' registration.event.slug %}" class="btn btn-outline-primary btn-sm">
+                        <p class="text-muted mb-2">
+                            📅 {{ registration.event.start_at|date:"d M Y, h:i A" }}
+                        </p>
+
+                        <p class="text-muted">
+                            📍 {{ registration.event.city }}
+                        </p>
+
+                        {% if registration.status == "confirmed" %}
+                            <div class="border rounded-3 p-3 bg-light mb-3">
+                                <small class="text-muted d-block mb-1">
+                                    Digital Ticket ID
+                                </small>
+
+                                <code class="text-dark">
+                                    {{ registration.ticket_code }}
+                                </code>
+                            </div>
+                        {% endif %}
+
+                        <a href="{% url 'event_detail' registration.event.slug %}"
+                           class="btn btn-outline-primary btn-sm">
                             Event Details
                         </a>
 
                         {% if registration.status != "cancelled" and not registration.checked_in_at %}
-                            <form method="post" action="{% url 'cancel_booking' registration.pk %}" class="d-inline">
+                            <form method="post"
+                                  action="{% url 'cancel_booking' registration.pk %}"
+                                  class="d-inline">
                                 {% csrf_token %}
-                                <button type="submit" class="btn btn-outline-danger btn-sm"
+
+                                <button type="submit"
+                                        class="btn btn-outline-danger btn-sm"
                                         onclick="return confirm('Cancel this registration?')">
                                     Cancel
                                 </button>
                             </form>
                         {% endif %}
+
                     </div>
                 </div>
             </div>
+
         {% empty %}
             <div class="col-12 text-center py-5">
                 <h4>No bookings yet</h4>
-                <a href="{% url 'event_list' %}" class="btn btn-primary mt-2">Explore Events</a>
+                <p class="text-muted">
+                    Register for an event to see your tickets here.
+                </p>
+
+                <a href="{% url 'event_list' %}" class="btn btn-primary">
+                    Explore Events
+                </a>
             </div>
         {% endfor %}
     </div>
