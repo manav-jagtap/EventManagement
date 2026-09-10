@@ -57,32 +57,39 @@
                                 <small class="text-muted d-block mb-1">
                                     Digital Ticket ID
                                 </small>
-
                                 <code class="text-dark">
                                     {{ registration.ticket_code }}
                                 </code>
                             </div>
                         {% endif %}
 
-                        <a href="{% url 'event_detail' registration.event.slug %}"
-                           class="btn btn-outline-primary btn-sm">
-                            Event Details
-                        </a>
+                        <div class="d-flex flex-wrap gap-2">
 
-                        {% if registration.status != "cancelled" and not registration.checked_in_at %}
-                            <form method="post"
-                                  action="{% url 'cancel_booking' registration.pk %}"
-                                  class="d-inline">
-                                {% csrf_token %}
+                            <a href="{% url 'event_detail' registration.event.slug %}"
+                               class="btn btn-outline-primary btn-sm">
+                                Event Details
+                            </a>
 
-                                <button type="submit"
-                                        class="btn btn-outline-danger btn-sm"
-                                        onclick="return confirm('Cancel this registration?')">
-                                    Cancel
-                                </button>
-                            </form>
-                        {% endif %}
+                            {% if registration.status == "confirmed" %}
+                                <a href="{% url 'ticket_detail' registration.ticket_code %}"
+                                   class="btn btn-primary btn-sm">
+                                    View Ticket
+                                </a>
+                            {% endif %}
 
+                            {% if registration.status != "cancelled" and not registration.checked_in_at %}
+                                <form method="post"
+                                      action="{% url 'cancel_booking' registration.pk %}">
+                                    {% csrf_token %}
+                                    <button type="submit"
+                                            class="btn btn-outline-danger btn-sm"
+                                            onclick="return confirm('Cancel this registration?')">
+                                        Cancel
+                                    </button>
+                                </form>
+                            {% endif %}
+
+                        </div>
                     </div>
                 </div>
             </div>
@@ -90,7 +97,6 @@
         {% empty %}
             <div class="col-12 text-center py-5">
                 <h4>No bookings yet</h4>
-
                 <p class="text-muted">
                     Register for an event to see your bookings here.
                 </p>
