@@ -1,0 +1,66 @@
+{% extends "accounts/base.html" %}
+
+{% block title %}Digital Ticket | EventHub{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center py-4">
+    <div class="col-lg-7">
+        <div class="card dashboard-card">
+            <div class="card-body p-4 p-md-5 text-center">
+
+                <div class="mb-3 fs-1">🎟️</div>
+
+                <h2 class="fw-bold mb-1">
+                    {{ registration.event.title }}
+                </h2>
+
+                <p class="text-muted mb-4">
+                    Digital Event Ticket
+                </p>
+
+                <div class="mb-4">
+                    <img
+                        src="data:image/png;base64,{{ qr_image }}"
+                        alt="QR Ticket"
+                        class="img-fluid"
+                        style="max-width: 260px;"
+                    >
+                </div>
+
+                <div class="border rounded-3 p-3 bg-light mb-4 text-start">
+                    <p class="mb-2">
+                        <strong>Attendee:</strong>
+                        {{ registration.user.get_full_name|default:registration.user.username }}
+                    </p>
+
+                    <p class="mb-2">
+                        <strong>Date:</strong>
+                        {{ registration.event.start_at|date:"d M Y, h:i A" }}
+                    </p>
+
+                    <p class="mb-2">
+                        <strong>Venue:</strong>
+                        {{ registration.event.venue }}, {{ registration.event.city }}
+                    </p>
+
+                    <p class="mb-0">
+                        <strong>Ticket ID:</strong><br>
+                        <code>{{ registration.ticket_code }}</code>
+                    </p>
+                </div>
+
+                <span class="badge bg-success mb-3">
+                    Confirmed
+                </span>
+
+                <div>
+                    <a href="{% url 'my_bookings' %}" class="btn btn-outline-primary">
+                        Back to My Bookings
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
