@@ -26,6 +26,20 @@
                             {{ registration.get_status_display }}
                         </span>
 
+                        {% if registration.status == "confirmed" %}
+                            <p class="small text-success mt-2 mb-2">
+                                Your seat is confirmed for this event.
+                            </p>
+                        {% elif registration.status == "waitlisted" %}
+                            <p class="small text-warning mt-2 mb-2">
+                                You are currently on the waitlist.
+                            </p>
+                        {% else %}
+                            <p class="small text-muted mt-2 mb-2">
+                                This booking has been cancelled.
+                            </p>
+                        {% endif %}
+
                         <h4 class="fw-bold mt-3">
                             {{ registration.event.title }}
                         </h4>
@@ -76,8 +90,9 @@
         {% empty %}
             <div class="col-12 text-center py-5">
                 <h4>No bookings yet</h4>
+
                 <p class="text-muted">
-                    Register for an event to see your tickets here.
+                    Register for an event to see your bookings here.
                 </p>
 
                 <a href="{% url 'event_list' %}" class="btn btn-primary">
