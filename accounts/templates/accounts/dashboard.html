@@ -26,6 +26,7 @@
                         <p class="text-muted">
                             Manage users, organizers, and platform data.
                         </p>
+
                         <a href="{% url 'admin:index' %}" class="btn btn-primary">
                             Open Admin
                         </a>
@@ -44,13 +45,20 @@
                 <div class="card dashboard-card h-100">
                     <div class="card-body p-4">
                         <div class="fs-2 mb-3">📅</div>
-                        <h5 class="fw-bold">My Events</h5>
+                        <h5 class="fw-bold">Event Management</h5>
                         <p class="text-muted">
-                            Create and manage your upcoming events.
+                            Create new events and manage your existing events.
                         </p>
-                        <a href="{% url 'my_events' %}" class="btn btn-primary">
-                            Manage Events
-                        </a>
+
+                        <div class="d-flex flex-wrap gap-2">
+                            <a href="{% url 'my_events' %}" class="btn btn-primary">
+                                Manage Events
+                            </a>
+
+                            <a href="{% url 'event_create' %}" class="btn btn-outline-primary">
+                                + Create Event
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -70,6 +78,7 @@
                         <p class="text-muted">
                             Find events and reserve your seat.
                         </p>
+
                         <a href="{% url 'event_list' %}" class="btn btn-primary">
                             Explore Events
                         </a>
@@ -83,9 +92,9 @@
                         <div class="fs-2 mb-3">📋</div>
                         <h5 class="fw-bold">My Bookings</h5>
                         <p class="text-muted">
-                            View your registrations, check booking status,
-                            and cancel upcoming bookings.
+                            View your registrations and manage upcoming bookings.
                         </p>
+
                         <a href="{% url 'my_bookings' %}" class="btn btn-primary">
                             View My Bookings
                         </a>
