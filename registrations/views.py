@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.shortcuts import get_object_or_404, redirect, render
+from django.utils import timezone
 from django.views.decorators.http import require_POST
 
 from accounts.models import User
@@ -20,6 +21,19 @@ def attendee_required(view_func):
         if (
             not request.user.is_active
             or request.user.role != User.Role.ATTENDEE
+        ):
+            raise PermissionDenied
+        return view_func(request, *args, **kwargs)
+
+    return wrapper
+
+
+def organizer_required(view_func):
+    @login_required
+    def wrapper(request, *args, **kwargs):
+        if not (
+            request.user.is_superuser
+            or request.user.role == User.Role.ORGANIZER
         ):
             raise PermissionDenied
         return view_func(request, *args, **kwargs)
@@ -57,9 +71,11 @@ def my_bookings(request):
         .order_by("-created_at")
     )
 
-    return render(request, "registrations/my_bookings.html", {
-        "registrations": registrations,
-    })
+    return render(
+        request,
+        "registrations/my_bookings.html",
+        {"registrations": registrations},
+    )
 
 
 @attendee_required
@@ -84,7 +100,10 @@ def ticket_detail(request, ticket_code):
     qr.add_data(str(registration.ticket_code))
     qr.make(fit=True)
 
-    image = qr.make_image(fill_color="black", back_color="white")
+    image = qr.make_image(
+        fill_color="black",
+        back_color="white",
+    )
 
     buffer = BytesIO()
     image.save(buffer, format="PNG")
@@ -123,3 +142,78 @@ def cancel_booking(request, registration_id):
         messages.error(request, "; ".join(exc.messages))
 
     return redirect("my_bookings")
+
+
+@organizer_required
+def verify_ticket(request):
+    registration = None
+    ticket_code = request.GET.get("ticket", "").strip()
+
+    if ticket_code:
+        registration = (
+            Registration.objects
+            .select_related("user", "event")
+            .filter(ticket_code=ticket_code)
+            .first()
+        )
+
+        if registration:
+            if (
+                not request.user.is_superuser
+                and registration.event.organizer_id != request.user.pk
+            ):
+                raise PermissionDenied
+
+    return render(
+        request,
+        "registrations/verify_ticket.html",
+        {
+            "registration": registration,
+            "ticket_code": ticket_code,
+        },
+    )
+
+
+@organizer_required
+@require_POST
+def check_in_ticket(request, registration_id):
+    registration = get_object_or_404(
+        Registration.objects.select_related("event"),
+        pk=registration_id,
+    )
+
+    if (
+        not request.user.is_superuser
+        and registration.event.organizer_id != request.user.pk
+    ):
+        raise PermissionDenied
+
+    if registration.status != Registration.Status.CONFIRMED:
+        messages.error(
+            request,
+            "Only confirmed registrations can be checked in."
+        )
+        return redirect(
+            f"/bookings/verify/?ticket={registration.ticket_code}"
+        )
+
+    if registration.checked_in_at:
+        messages.info(
+            request,
+            "This ticket has already been checked in."
+        )
+        return redirect(
+            f"/bookings/verify/?ticket={registration.ticket_code}"
+        )
+
+    registration.checked_in_at = timezone.now()
+    registration.save(update_fields=["checked_in_at"])
+
+    messages.success(
+        request,
+        "Attendee checked in successfully."
+    )
+
+    return redirect(
+        f"/bookings/verify/?ticket={registration.ticket_code}"
+    )
