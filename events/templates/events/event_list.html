@@ -1,638 +1,563 @@
 {% extends "accounts/base.html" %}
-
 {% block title %}Explore Events | EventHub{% endblock %}
 
 {% block extra_css %}
 <style>
-    body {
-        background:
-            radial-gradient(
-                circle at top left,
-                rgba(255, 107, 53, 0.08),
-                transparent 25%
-            ),
-            linear-gradient(
-                180deg,
-                #07101d 0%,
-                #0a1424 45%,
-                #0d1728 100%
-            ) !important;
+body{
+    background:
+        radial-gradient(circle at top left,rgba(255,107,53,.08),transparent 25%),
+        linear-gradient(180deg,#07101d 0%,#0a1424 45%,#0d1728 100%)!important;
+}
+main.container{background:transparent!important}
+
+.hero-section{
+    position:relative;
+    overflow:hidden;
+    border-radius:28px;
+    padding:70px 55px;
+    margin-bottom:32px;
+    background:
+        radial-gradient(circle at 85% 20%,rgba(255,107,53,.2),transparent 30%),
+        linear-gradient(135deg,#081226,#0b132b 55%,#172554);
+    color:#fff;
+    box-shadow:0 24px 55px rgba(0,0,0,.28);
+}
+
+.hero-label{
+    display:inline-flex;
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.12);
+    color:#ffb089;
+    padding:8px 14px;
+    border-radius:999px;
+    font-size:.82rem;
+    font-weight:700;
+    margin-bottom:18px;
+}
+
+.hero-title{
+    font-size:clamp(2.5rem,5vw,4.4rem);
+    line-height:1.05;
+    font-weight:800;
+    letter-spacing:-2px;
+    margin-bottom:18px;
+}
+
+.hero-title span{color:#ff6b35}
+
+.hero-text{
+    max-width:620px;
+    color:#cbd5e1;
+    font-size:1.08rem;
+    line-height:1.75;
+    margin-bottom:28px;
+}
+
+.hero-actions{
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+}
+
+.hero-btn-outline{
+    border:1px solid rgba(255,255,255,.25);
+    color:#fff;
+    background:rgba(255,255,255,.04);
+}
+
+.hero-btn-outline:hover{
+    background:rgba(255,255,255,.1);
+    color:#fff;
+}
+
+/* ORBIT */
+
+.orbit-wrapper{
+    position:relative;
+    width:460px;
+    height:460px;
+    margin:auto;
+}
+
+.orbit-ring{
+    position:absolute;
+    inset:55px;
+    border:1px dashed rgba(255,255,255,.28);
+    border-radius:50%;
+    animation:spin 32s linear infinite;
+    transform-origin:center;
+}
+
+.orbit-ring::before{
+    content:"";
+    position:absolute;
+    inset:35px;
+    border:1px solid rgba(255,107,53,.12);
+    border-radius:50%;
+}
+
+.orbit-center{
+    position:absolute;
+    top:50%;
+    left:50%;
+    width:120px;
+    height:120px;
+    transform:translate(-50%,-50%);
+    border-radius:30px;
+    background:linear-gradient(135deg,#ff6b35,#f97316);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:3.5rem;
+    box-shadow:0 18px 48px rgba(255,107,53,.4);
+    z-index:3;
+}
+
+.orbit-item{
+    position:absolute;
+    width:76px;
+    height:76px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    border-radius:20px;
+    background:rgba(255,255,255,.11);
+    border:1px solid rgba(255,255,255,.18);
+    backdrop-filter:blur(10px);
+    color:#fff;
+    font-size:.68rem;
+    font-weight:700;
+    box-shadow:0 10px 26px rgba(0,0,0,.22);
+    animation:counterSpin 32s linear infinite;
+}
+
+.orbit-item span{
+    font-size:1.5rem;
+    margin-bottom:3px;
+}
+
+.item-1{top:-25px;left:50%;transform:translateX(-50%)}
+.item-2{top:4%;right:11%}
+.item-3{top:28%;right:-25px}
+.item-4{bottom:28%;right:-25px}
+.item-5{bottom:4%;right:11%}
+.item-6{bottom:-25px;left:50%;transform:translateX(-50%)}
+.item-7{bottom:4%;left:11%}
+.item-8{bottom:28%;left:-25px}
+.item-9{top:28%;left:-25px}
+.item-10{top:4%;left:11%}
+
+@keyframes spin{
+    from{transform:rotate(0deg)}
+    to{transform:rotate(360deg)}
+}
+
+@keyframes counterSpin{
+    from{rotate:0deg}
+    to{rotate:-360deg}
+}
+
+/* SEARCH */
+
+.search-panel{
+    background:linear-gradient(180deg,#0f1b31,#0b1628);
+    border:1px solid #1f314d;
+    border-radius:22px;
+    padding:22px;
+    box-shadow:0 14px 35px rgba(0,0,0,.18);
+    margin-bottom:40px;
+}
+
+.search-title{
+    font-weight:700;
+    margin-bottom:14px;
+    color:#fff;
+}
+
+.search-panel .form-control,
+.search-panel .form-select{
+    background:#111f36;
+    border:1px solid #243956;
+    color:#fff;
+}
+
+.search-panel .form-control::placeholder{color:#94a3b8}
+
+.search-panel .form-control:focus,
+.search-panel .form-select:focus{
+    border-color:#ff6b35;
+    box-shadow:0 0 0 .2rem rgba(255,107,53,.14);
+    background:#12233d;
+    color:#fff;
+}
+
+/* EVENTS */
+
+.section-label{
+    color:#ff8d62;
+    font-weight:700;
+    text-transform:uppercase;
+    font-size:.78rem;
+    letter-spacing:1px;
+}
+
+.section-title{
+    font-weight:800;
+    color:#fff;
+}
+
+.count-text{color:#94a3b8}
+
+.event-card{
+    border:1px solid #1f314d;
+    border-radius:20px;
+    overflow:hidden;
+    background:linear-gradient(180deg,#101c32,#0c1729);
+    height:100%;
+    transition:.25s;
+}
+
+.event-card:hover{
+    transform:translateY(-7px);
+    border-color:rgba(255,107,53,.45);
+    box-shadow:0 20px 40px rgba(0,0,0,.26);
+}
+
+.event-image-wrapper{
+    height:210px;
+    overflow:hidden;
+    background:#0d1a2e;
+}
+
+.event-image{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    transition:.35s;
+}
+
+.event-card:hover .event-image{transform:scale(1.05)}
+
+.event-placeholder{
+    height:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:linear-gradient(135deg,#16243c,#0d1728);
+    font-size:3.2rem;
+}
+
+.event-category{
+    display:inline-flex;
+    padding:6px 10px;
+    border-radius:999px;
+    color:#ff946e;
+    background:rgba(255,107,53,.1);
+    border:1px solid rgba(255,107,53,.18);
+    font-size:.75rem;
+    font-weight:700;
+}
+
+.event-title{
+    font-weight:800;
+    color:#fff;
+    margin:12px 0;
+}
+
+.event-meta{
+    color:#94a3b8;
+    font-size:.88rem;
+    margin-bottom:7px;
+}
+
+.event-footer{
+    border-top:1px solid #1d2d47;
+    padding-top:16px;
+    margin-top:auto;
+}
+
+.event-price{
+    color:#fff;
+    font-weight:800;
+}
+
+.empty-state{
+    padding:70px 20px;
+    text-align:center;
+    background:linear-gradient(180deg,#101c32,#0c1729);
+    border:1px dashed #2a4061;
+    border-radius:20px;
+}
+
+.empty-state h4{color:#fff}
+.empty-state p{color:#94a3b8!important}
+
+/* RESPONSIVE */
+
+@media(max-width:1200px){
+    .orbit-wrapper{width:410px;height:410px}
+}
+
+@media(max-width:991px){
+    .hero-section{padding:50px 32px}
+    .orbit-wrapper{
+        width:390px;
+        height:390px;
+        margin-top:55px;
+    }
+}
+
+@media(max-width:576px){
+    .hero-section{
+        padding:40px 22px;
+        border-radius:20px;
     }
 
-    main.container {
-        background: transparent !important;
+    .hero-title{font-size:2.45rem}
+
+    .orbit-wrapper{
+        width:300px;
+        height:300px;
     }
 
-    .hero-section {
-        position: relative;
-        overflow: hidden;
-        border-radius: 28px;
-        padding: 70px 55px;
-        margin-bottom: 32px;
+    .orbit-ring{inset:38px}
 
-        background:
-            radial-gradient(
-                circle at 85% 20%,
-                rgba(255, 107, 53, 0.20),
-                transparent 30%
-            ),
-            linear-gradient(
-                135deg,
-                #081226,
-                #0b132b 55%,
-                #172554
-            );
-
-        color: #ffffff;
-
-        box-shadow:
-            0 24px 55px rgba(0, 0, 0, 0.28);
+    .orbit-item{
+        width:54px;
+        height:54px;
+        font-size:.52rem;
+        border-radius:15px;
     }
 
-    .hero-label {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
+    .orbit-item span{font-size:1.05rem}
 
-        background: rgba(255, 255, 255, 0.08);
-        border: 1px solid rgba(255, 255, 255, 0.12);
-
-        color: #ffb089;
-
-        padding: 8px 14px;
-        border-radius: 999px;
-
-        font-size: 0.82rem;
-        font-weight: 700;
-        letter-spacing: 0.5px;
-
-        margin-bottom: 18px;
+    .orbit-center{
+        width:82px;
+        height:82px;
+        font-size:2.4rem;
+        border-radius:22px;
     }
 
-    .hero-title {
-        font-size: clamp(2.5rem, 5vw, 4.5rem);
-        line-height: 1.05;
-        font-weight: 800;
-        letter-spacing: -2px;
-        margin-bottom: 18px;
-    }
-
-    .hero-title span {
-        color: #ff6b35;
-    }
-
-    .hero-text {
-        max-width: 580px;
-        color: #cbd5e1;
-        font-size: 1.08rem;
-        line-height: 1.7;
-        margin-bottom: 28px;
-    }
-
-    .hero-actions {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-    }
-
-    .hero-btn-outline {
-        border: 1px solid rgba(255, 255, 255, 0.25);
-        color: #ffffff;
-        background: rgba(255, 255, 255, 0.04);
-    }
-
-    .hero-btn-outline:hover {
-        background: rgba(255, 255, 255, 0.10);
-        color: #ffffff;
-    }
-
-
-    /* ORBIT ANIMATION */
-
-    .orbit-wrapper {
-        position: relative;
-        width: 330px;
-        height: 330px;
-        margin-left: auto;
-        margin-right: auto;
-    }
-
-    .orbit-ring {
-        position: absolute;
-        inset: 30px;
-        border: 1px dashed rgba(255, 255, 255, 0.20);
-        border-radius: 50%;
-        animation: rotateOrbit 18s linear infinite;
-    }
-
-    .orbit-center {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 112px;
-        height: 112px;
-        transform: translate(-50%, -50%);
-        border-radius: 30px;
-
-        background: linear-gradient(135deg, #ff6b35, #f97316);
-
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        font-size: 3.4rem;
-
-        box-shadow: 0 18px 40px rgba(255, 107, 53, 0.32);
-    }
-
-    .orbit-item {
-        position: absolute;
-        width: 70px;
-        height: 70px;
-
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-
-        border-radius: 18px;
-
-        background: rgba(255, 255, 255, 0.10);
-        border: 1px solid rgba(255, 255, 255, 0.16);
-
-        backdrop-filter: blur(8px);
-
-        color: #ffffff;
-
-        font-size: 0.70rem;
-        font-weight: 600;
-
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
-
-        animation: counterRotate 18s linear infinite;
-    }
-
-    .orbit-item span {
-        font-size: 1.5rem;
-        margin-bottom: 2px;
-    }
-
-    .item-1 {
-        top: -5px;
-        left: 50%;
-        transform: translateX(-50%);
-    }
-
-    .item-2 {
-        right: -5px;
-        top: 50%;
-        transform: translateY(-50%);
-    }
-
-    .item-3 {
-        bottom: -5px;
-        left: 50%;
-        transform: translateX(-50%);
-    }
-
-    .item-4 {
-        left: -5px;
-        top: 50%;
-        transform: translateY(-50%);
-    }
-
-    @keyframes rotateOrbit {
-        from { transform: rotate(0deg); }
-        to { transform: rotate(360deg); }
-    }
-
-    @keyframes counterRotate {
-        from { rotate: 0deg; }
-        to { rotate: -360deg; }
-    }
-
-
-    /* SEARCH PANEL */
-
-    .search-panel {
-        background: linear-gradient(180deg, #0f1b31, #0b1628);
-        border: 1px solid #1f314d;
-        border-radius: 22px;
-        padding: 22px;
-        box-shadow: 0 14px 35px rgba(0, 0, 0, 0.18);
-        margin-bottom: 40px;
-    }
-
-    .search-title {
-        font-weight: 700;
-        margin-bottom: 14px;
-        color: #ffffff;
-    }
-
-    .search-panel .form-control,
-    .search-panel .form-select {
-        background: #111f36;
-        border: 1px solid #243956;
-        color: #ffffff;
-    }
-
-    .search-panel .form-control::placeholder {
-        color: #94a3b8;
-    }
-
-    .search-panel .form-control:focus,
-    .search-panel .form-select:focus {
-        border-color: #ff6b35;
-        box-shadow: 0 0 0 0.2rem rgba(255, 107, 53, 0.14);
-        background: #12233d;
-        color: #ffffff;
-    }
-
-
-    /* SECTION HEADER */
-
-    .section-label {
-        color: #ff8d62;
-        font-weight: 700;
-        text-transform: uppercase;
-        font-size: 0.78rem;
-        letter-spacing: 1px;
-    }
-
-    .section-title {
-        font-weight: 800;
-        letter-spacing: -0.7px;
-        color: #ffffff;
-    }
-
-    .count-text {
-        color: #94a3b8;
-    }
-
-
-    /* EVENT CARD */
-
-    .event-card {
-        border: 1px solid #1f314d;
-        border-radius: 20px;
-        overflow: hidden;
-        background: linear-gradient(180deg, #101c32, #0c1729);
-        height: 100%;
-        transition:
-            transform 0.25s ease,
-            box-shadow 0.25s ease,
-            border-color 0.25s ease;
-    }
-
-    .event-card:hover {
-        transform: translateY(-7px);
-        border-color: rgba(255, 107, 53, 0.45);
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.26);
-    }
-
-    .event-image-wrapper {
-        position: relative;
-        overflow: hidden;
-        height: 210px;
-        background: #0d1a2e;
-    }
-
-    .event-image {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.35s ease;
-    }
-
-    .event-card:hover .event-image {
-        transform: scale(1.05);
-    }
-
-    .event-placeholder {
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: linear-gradient(135deg, #16243c, #0d1728);
-        font-size: 3.2rem;
-    }
-
-    .event-category {
-        display: inline-flex;
-        padding: 6px 10px;
-        border-radius: 999px;
-        color: #ff946e;
-        background: rgba(255, 107, 53, 0.10);
-        border: 1px solid rgba(255, 107, 53, 0.18);
-        font-size: 0.75rem;
-        font-weight: 700;
-    }
-
-    .event-title {
-        font-weight: 800;
-        color: #ffffff;
-        margin-top: 12px;
-        margin-bottom: 12px;
-    }
-
-    .event-meta {
-        color: #94a3b8;
-        font-size: 0.88rem;
-        margin-bottom: 7px;
-    }
-
-    .event-footer {
-        border-top: 1px solid #1d2d47;
-        padding-top: 16px;
-        margin-top: auto;
-    }
-
-    .event-price {
-        color: #ffffff;
-        font-size: 1rem;
-        font-weight: 800;
-    }
-
-
-    /* EMPTY STATE */
-
-    .empty-state {
-        padding: 70px 20px;
-        text-align: center;
-        background: linear-gradient(180deg, #101c32, #0c1729);
-        border: 1px dashed #2a4061;
-        border-radius: 20px;
-    }
-
-    .empty-icon {
-        font-size: 3rem;
-        margin-bottom: 15px;
-    }
-
-    .empty-state h4 {
-        color: #ffffff;
-    }
-
-    .empty-state p {
-        color: #94a3b8 !important;
-    }
-
-
-    /* RESPONSIVE */
-
-    @media (max-width: 991px) {
-        .hero-section {
-            padding: 50px 32px;
-        }
-
-        .orbit-wrapper {
-            margin-top: 45px;
-        }
-    }
-
-    @media (max-width: 576px) {
-        .hero-section {
-            padding: 40px 22px;
-            border-radius: 20px;
-        }
-
-        .hero-title {
-            font-size: 2.5rem;
-        }
-
-        .orbit-wrapper {
-            width: 270px;
-            height: 270px;
-        }
-
-        .orbit-item {
-            width: 58px;
-            height: 58px;
-            font-size: 0.60rem;
-        }
-
-        .orbit-center {
-            width: 90px;
-            height: 90px;
-            font-size: 2.6rem;
-        }
-
-        .search-panel {
-            padding: 16px;
-        }
-    }
+    .search-panel{padding:16px}
+}
 </style>
 {% endblock %}
-
 
 {% block content %}
 <section>
 
-    <div class="hero-section">
-        <div class="row align-items-center">
+<div class="hero-section">
+    <div class="row align-items-center">
 
-            <div class="col-lg-7">
-                <div class="hero-label">
-                    ✦ DISCOVER • BOOK • EXPERIENCE
-                </div>
+        <div class="col-lg-7">
+            <div class="hero-label">✦ CURATED EVENTS • REAL EXPERIENCES</div>
 
-                <h1 class="hero-title">
-                    Find events worth
-                    <span>remembering.</span>
-                </h1>
+            <h1 class="hero-title">
+                More than events.
+                <span>Experiences that stay with you.</span>
+            </h1>
 
-                <p class="hero-text">
-                    Discover workshops, conferences, technology events,
-                    meetups and experiences happening around you.
-                    Book your seat and manage everything from one place.
-                </p>
+            <p class="hero-text">
+                Explore a curated world of concerts, workshops, sports, festivals,
+                and community experiences — bringing the best of Maharashtra closer to you.
+            </p>
 
-                <div class="hero-actions">
-                    <a href="#events" class="btn btn-primary px-4 py-2">
-                        Explore Events
+            <div class="hero-actions">
+                <a href="#events" class="btn btn-primary px-4 py-2">
+                    Explore Events
+                </a>
+
+                {% if not user.is_authenticated %}
+                    <a href="{% url 'signup' %}" class="btn hero-btn-outline px-4 py-2">
+                        Create Account
                     </a>
 
-                    {% if not user.is_authenticated %}
-                        <a href="{% url 'signup' %}" class="btn hero-btn-outline px-4 py-2">
-                            Create Account
-                        </a>
-                    {% elif user.role == "organizer" or user.is_superuser %}
-                        <a href="{% url 'event_create' %}" class="btn hero-btn-outline px-4 py-2">
-                            + Create Event
-                        </a>
-                    {% endif %}
-                </div>
+                {% elif user.role == "organizer" or user.is_superuser %}
+                    <a href="{% url 'event_create' %}" class="btn hero-btn-outline px-4 py-2">
+                        + Create Event
+                    </a>
+                {% endif %}
             </div>
-
-            <div class="col-lg-5">
-                <div class="orbit-wrapper">
-                    <div class="orbit-ring">
-                        <div class="orbit-item item-1">
-                            <span>💻</span>
-                            Tech
-                        </div>
-
-                        <div class="orbit-item item-2">
-                            <span>🎤</span>
-                            Meetup
-                        </div>
-
-                        <div class="orbit-item item-3">
-                            <span>🎓</span>
-                            Workshop
-                        </div>
-
-                        <div class="orbit-item item-4">
-                            <span>🎨</span>
-                            Creative
-                        </div>
-                    </div>
-
-                    <div class="orbit-center">
-                        🎟️
-                    </div>
-                </div>
-            </div>
-
         </div>
+
+        <div class="col-lg-5">
+            <div class="orbit-wrapper">
+
+                <div class="orbit-ring">
+                    <div class="orbit-item item-1"><span>💻</span>Tech</div>
+                    <div class="orbit-item item-2"><span>🎓</span>Workshop</div>
+                    <div class="orbit-item item-3"><span>🎵</span>Music</div>
+                    <div class="orbit-item item-4"><span>⚽</span>Sports</div>
+                    <div class="orbit-item item-5"><span>🍴</span>Food</div>
+                    <div class="orbit-item item-6"><span>🎭</span>Culture</div>
+                    <div class="orbit-item item-7"><span>🎨</span>Design</div>
+                    <div class="orbit-item item-8"><span>🎤</span>Meetup</div>
+                    <div class="orbit-item item-9"><span>💼</span>Business</div>
+                    <div class="orbit-item item-10"><span>📷</span>Photo</div>
+                </div>
+
+                <div class="orbit-center">🎟️</div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="search-panel">
+    <div class="search-title">🔎 Find your next event</div>
+
+    <form method="get" class="row g-3">
+
+        <div class="col-md-7">
+            <input
+                type="search"
+                name="q"
+                class="form-control"
+                placeholder="Search by event name or city..."
+                value="{{ query }}"
+            >
+        </div>
+
+        <div class="col-md-3">
+            <select name="category" class="form-select">
+
+                <option value="">All Categories</option>
+
+                {% for category in categories %}
+                    <option
+                        value="{{ category.slug }}"
+                        {% if selected_category == category.slug %}selected{% endif %}
+                    >
+                        {{ category.name }}
+                    </option>
+                {% endfor %}
+
+            </select>
+        </div>
+
+        <div class="col-md-2">
+            <button class="btn btn-primary w-100 h-100">
+                Search
+            </button>
+        </div>
+
+    </form>
+</div>
+
+<div id="events">
+
+    <div class="d-flex justify-content-between align-items-end flex-wrap gap-3 mb-4">
+
+        <div>
+            <div class="section-label">Upcoming Events</div>
+
+            <h2 class="section-title mb-0">
+                Explore what's happening
+            </h2>
+        </div>
+
+        {% if events %}
+            <div class="count-text small">
+                {{ events|length }}
+                event{{ events|length|pluralize }}
+                available
+            </div>
+        {% endif %}
+
     </div>
 
+    <div class="row g-4">
 
-    <div class="search-panel">
-        <div class="search-title">
-            🔎 Find your next event
-        </div>
+        {% for event in events %}
 
-        <form method="get" class="row g-3">
-            <div class="col-md-7">
-                <input
-                    type="search"
-                    name="q"
-                    class="form-control"
-                    placeholder="Search by event name or city..."
-                    value="{{ query }}"
-                >
-            </div>
+            <div class="col-md-6 col-lg-4">
 
-            <div class="col-md-3">
-                <select name="category" class="form-select">
-                    <option value="">All Categories</option>
+                <div class="event-card d-flex flex-column">
 
-                    {% for category in categories %}
-                        <option
-                            value="{{ category.slug }}"
-                            {% if selected_category == category.slug %}selected{% endif %}
-                        >
-                            {{ category.name }}
-                        </option>
-                    {% endfor %}
-                </select>
-            </div>
+                    <div class="event-image-wrapper">
 
-            <div class="col-md-2">
-                <button type="submit" class="btn btn-primary w-100 h-100">
-                    Search
-                </button>
-            </div>
-        </form>
-    </div>
+                        {% if event.banner %}
+                            <img
+                                src="{{ event.banner.url }}"
+                                class="event-image"
+                                alt="{{ event.title }}"
+                            >
+                        {% else %}
+                            <div class="event-placeholder">🎟️</div>
+                        {% endif %}
 
+                    </div>
 
-    <div id="events">
+                    <div class="card-body d-flex flex-column p-4">
 
-        <div class="d-flex justify-content-between align-items-end flex-wrap gap-3 mb-4">
-            <div>
-                <div class="section-label">
-                    Upcoming Events
-                </div>
+                        <span class="event-category">
+                            {{ event.category.name }}
+                        </span>
 
-                <h2 class="section-title mb-0">
-                    Explore what's happening
-                </h2>
-            </div>
+                        <h5 class="event-title">
+                            {{ event.title }}
+                        </h5>
 
-            {% if events %}
-                <div class="count-text small">
-                    {{ events|length }} event{{ events|length|pluralize }} available
-                </div>
-            {% endif %}
-        </div>
-
-
-        <div class="row g-4">
-            {% for event in events %}
-                <div class="col-md-6 col-lg-4">
-                    <div class="event-card d-flex flex-column">
-
-                        <div class="event-image-wrapper">
-                            {% if event.banner %}
-                                <img
-                                    src="{{ event.banner.url }}"
-                                    class="event-image"
-                                    alt="{{ event.title }}"
-                                >
-                            {% else %}
-                                <div class="event-placeholder">
-                                    🎟️
-                                </div>
-                            {% endif %}
+                        <div class="event-meta">
+                            📅 {{ event.start_at|date:"d M Y, h:i A" }}
                         </div>
 
-                        <div class="card-body d-flex flex-column p-4">
-                            <div>
-                                <span class="event-category">
-                                    {{ event.category.name }}
-                                </span>
+                        <div class="event-meta">
+                            📍 {{ event.city }} · {{ event.venue }}
+                        </div>
 
-                                <h5 class="event-title">
-                                    {{ event.title }}
-                                </h5>
+                        <div class="event-footer d-flex justify-content-between align-items-center gap-3">
 
-                                <div class="event-meta">
-                                    📅 {{ event.start_at|date:"d M Y, h:i A" }}
-                                </div>
-
-                                <div class="event-meta">
-                                    📍 {{ event.city }} · {{ event.venue }}
-                                </div>
+                            <div class="event-price">
+                                {% if event.is_free %}
+                                    <span class="text-success">Free</span>
+                                {% else %}
+                                    ₹{{ event.price }}
+                                {% endif %}
                             </div>
 
-                            <div class="event-footer d-flex justify-content-between align-items-center gap-3">
-                                <div class="event-price">
-                                    {% if event.is_free %}
-                                        <span class="text-success">Free</span>
-                                    {% else %}
-                                        ₹{{ event.price }}
-                                    {% endif %}
-                                </div>
+                            <a
+                                href="{% url 'event_detail' event.slug %}"
+                                class="btn btn-primary btn-sm px-3"
+                            >
+                                View Details
+                            </a>
 
-                                <a
-                                    href="{% url 'event_detail' event.slug %}"
-                                    class="btn btn-primary btn-sm px-3"
-                                >
-                                    View Details
-                                </a>
-                            </div>
                         </div>
 
                     </div>
+
                 </div>
 
-            {% empty %}
-                <div class="col-12">
-                    <div class="empty-state">
-                        <div class="empty-icon">📅</div>
-                        <h4 class="fw-bold">No events found</h4>
-                        <p class="mb-0">
-                            Try another search or check back later
-                            for upcoming events.
-                        </p>
-                    </div>
+            </div>
+
+        {% empty %}
+
+            <div class="col-12">
+
+                <div class="empty-state">
+
+                    <div class="fs-1 mb-3">📅</div>
+
+                    <h4 class="fw-bold">
+                        No events found
+                    </h4>
+
+                    <p class="mb-0">
+                        Try another search or check back later.
+                    </p>
+
                 </div>
-            {% endfor %}
-        </div>
+
+            </div>
+
+        {% endfor %}
 
     </div>
+
+</div>
 
 </section>
 {% endblock %}
