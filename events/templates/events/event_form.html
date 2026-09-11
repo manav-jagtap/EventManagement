@@ -2,49 +2,320 @@
 
 {% block title %}{{ page_title }} | EventHub{% endblock %}
 
+{% block extra_css %}
+<style>
+    body {
+        background:
+            radial-gradient(
+                circle at top left,
+                rgba(255, 107, 53, 0.08),
+                transparent 25%
+            ),
+            linear-gradient(
+                180deg,
+                #07101d 0%,
+                #0a1424 45%,
+                #0d1728 100%
+            ) !important;
+    }
+
+    main.container {
+        background: transparent !important;
+    }
+
+    .form-shell {
+        padding: 35px 0 55px;
+    }
+
+    .form-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        flex-wrap: wrap;
+        margin-bottom: 26px;
+    }
+
+    .page-label {
+        color: #ff8d62;
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        margin-bottom: 6px;
+    }
+
+    .page-title {
+        color: #ffffff;
+        font-weight: 800;
+        letter-spacing: -0.8px;
+        margin-bottom: 4px;
+    }
+
+    .page-subtitle {
+        color: #94a3b8;
+        margin-bottom: 0;
+    }
+
+    .form-card {
+        background: linear-gradient(
+            180deg,
+            #101c32,
+            #0c1729
+        );
+
+        border: 1px solid #1f314d;
+        border-radius: 22px;
+
+        box-shadow:
+            0 18px 40px rgba(0, 0, 0, 0.22);
+    }
+
+    .form-card .card-body {
+        padding: 32px;
+    }
+
+    .form-label {
+        color: #e2e8f0;
+        font-weight: 600;
+        margin-bottom: 8px;
+    }
+
+    .form-card .form-control,
+    .form-card .form-select,
+    .form-card textarea {
+        background: #111f36;
+        border: 1px solid #263a58;
+        color: #ffffff;
+    }
+
+    .form-card .form-control::placeholder,
+    .form-card textarea::placeholder {
+        color: #718198;
+    }
+
+    .form-card .form-control:focus,
+    .form-card .form-select:focus,
+    .form-card textarea:focus {
+        background: #13233c;
+        border-color: #ff6b35;
+        color: #ffffff;
+
+        box-shadow:
+            0 0 0 0.2rem rgba(255, 107, 53, 0.13);
+    }
+
+    .form-card .form-select option {
+        background: #111f36;
+        color: #ffffff;
+    }
+
+    .form-card input[type="file"] {
+        color: #cbd5e1;
+    }
+
+    .form-card input[type="file"]::file-selector-button {
+        background: #1c2b45;
+        border: 0;
+        color: #ffffff;
+
+        padding: 9px 14px;
+        margin-right: 12px;
+
+        border-radius: 8px;
+
+        cursor: pointer;
+    }
+
+    .form-card input[type="file"]::file-selector-button:hover {
+        background: #263a58;
+    }
+
+    .form-text {
+        color: #7f8fa8 !important;
+        font-size: 0.82rem;
+    }
+
+    .field-error {
+        color: #f87171;
+        font-size: 0.82rem;
+        margin-top: 6px;
+    }
+
+    .form-divider {
+        border-top: 1px solid #1d2d47;
+        margin: 28px 0 22px;
+    }
+
+    .btn-soft {
+        border: 1px solid #344766;
+        color: #dbeafe;
+        background: transparent;
+    }
+
+    .btn-soft:hover {
+        color: #ffffff;
+        background: #17233a;
+        border-color: #526987;
+    }
+
+    .alert-danger {
+        background: rgba(239, 68, 68, 0.10);
+        border: 1px solid rgba(239, 68, 68, 0.25);
+        color: #fecaca;
+    }
+
+    @media (max-width: 768px) {
+        .form-header {
+            align-items: flex-start;
+            flex-direction: column;
+        }
+
+        .form-header .btn {
+            width: 100%;
+        }
+
+        .form-card .card-body {
+            padding: 22px;
+        }
+    }
+</style>
+{% endblock %}
+
+
 {% block content %}
-<div class="row justify-content-center py-4">
-    <div class="col-lg-9">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h1 class="fw-bold">{{ page_title }}</h1>
-            <a href="{% url 'my_events' %}" class="btn btn-outline-secondary">Back</a>
-        </div>
 
-        <div class="card dashboard-card">
-            <div class="card-body p-4">
-                <form method="post" enctype="multipart/form-data">
-                    {% csrf_token %}
+<div class="form-shell">
 
-                    {% if form.non_field_errors %}
-                        <div class="alert alert-danger">{{ form.non_field_errors }}</div>
-                    {% endif %}
+    <div class="row justify-content-center">
 
-                    <div class="row g-3">
-                        {% for field in form %}
-                            <div class="{% if field.name == 'description' or field.name == 'address' %}col-12{% else %}col-md-6{% endif %}">
-                                <label class="form-label fw-semibold" for="{{ field.id_for_label }}">
-                                    {{ field.label }}
-                                </label>
-                                {{ field }}
+        <div class="col-lg-9">
 
-                                {% if field.help_text %}
-                                    <div class="form-text">{{ field.help_text }}</div>
-                                {% endif %}
+            <div class="form-header">
 
-                                {% for error in field.errors %}
-                                    <div class="text-danger small mt-1">{{ error }}</div>
-                                {% endfor %}
-                            </div>
-                        {% endfor %}
+                <div>
+                    <div class="page-label">
+                        Organizer Workspace
                     </div>
 
-                    <div class="mt-4 d-flex gap-2">
-                        <button type="submit" class="btn btn-primary px-4">Save Event</button>
-                        <a href="{% url 'my_events' %}" class="btn btn-outline-secondary">Cancel</a>
-                    </div>
-                </form>
+                    <h1 class="page-title">
+                        {{ page_title }}
+                    </h1>
+
+                    <p class="page-subtitle">
+                        Add event details, schedule, location and publishing information.
+                    </p>
+                </div>
+
+                <a
+                    href="{% url 'my_events' %}"
+                    class="btn btn-soft px-4"
+                >
+                    ← Back
+                </a>
+
             </div>
+
+
+            <div class="card form-card">
+
+                <div class="card-body">
+
+                    <form
+                        method="post"
+                        enctype="multipart/form-data"
+                    >
+
+                        {% csrf_token %}
+
+
+                        {% if form.non_field_errors %}
+
+                            <div class="alert alert-danger mb-4">
+                                {{ form.non_field_errors }}
+                            </div>
+
+                        {% endif %}
+
+
+                        <div class="row g-4">
+
+                            {% for field in form %}
+
+                                <div class="
+                                    {% if field.name == 'description' or field.name == 'address' %}
+                                        col-12
+                                    {% else %}
+                                        col-md-6
+                                    {% endif %}
+                                ">
+
+                                    <label
+                                        class="form-label"
+                                        for="{{ field.id_for_label }}"
+                                    >
+                                        {{ field.label }}
+                                    </label>
+
+
+                                    {{ field }}
+
+
+                                    {% if field.help_text %}
+
+                                        <div class="form-text">
+                                            {{ field.help_text }}
+                                        </div>
+
+                                    {% endif %}
+
+
+                                    {% for error in field.errors %}
+
+                                        <div class="field-error">
+                                            {{ error }}
+                                        </div>
+
+                                    {% endfor %}
+
+                                </div>
+
+                            {% endfor %}
+
+                        </div>
+
+
+                        <div class="form-divider"></div>
+
+
+                        <div class="d-flex flex-wrap gap-2">
+
+                            <button
+                                type="submit"
+                                class="btn btn-primary px-4"
+                            >
+                                Save Event
+                            </button>
+
+                            <a
+                                href="{% url 'my_events' %}"
+                                class="btn btn-soft px-4"
+                            >
+                                Cancel
+                            </a>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
         </div>
+
     </div>
+
 </div>
+
 {% endblock %}

@@ -2,112 +2,516 @@
 
 {% block title %}Dashboard | EventHub{% endblock %}
 
-{% block content %}
-<div class="py-4">
-    <p class="text-uppercase text-primary fw-semibold small mb-2">
-        Your workspace
-    </p>
+{% block extra_css %}
+<style>
+    body {
+        background:
+            radial-gradient(
+                circle at top left,
+                rgba(255, 107, 53, 0.08),
+                transparent 25%
+            ),
+            linear-gradient(
+                180deg,
+                #07101d 0%,
+                #0a1424 45%,
+                #0d1728 100%
+            ) !important;
+    }
 
-    <h1 class="fw-bold mb-2">
-        Welcome, {{ user.first_name|default:user.username }} 👋
-    </h1>
+    main.container {
+        background: transparent !important;
+    }
+
+    .dashboard-shell {
+        padding: 35px 0 55px;
+    }
+
+    .dashboard-hero {
+        position: relative;
+        overflow: hidden;
+
+        padding: 42px 38px;
+        margin-bottom: 30px;
+
+        border-radius: 24px;
+
+        background:
+            radial-gradient(
+                circle at 90% 20%,
+                rgba(255, 107, 53, 0.18),
+                transparent 28%
+            ),
+            linear-gradient(
+                135deg,
+                #0b132b,
+                #101c35 55%,
+                #172554
+            );
+
+        border: 1px solid rgba(255, 255, 255, 0.07);
+
+        box-shadow:
+            0 22px 50px rgba(0, 0, 0, 0.22);
+    }
+
+    .dashboard-label {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+
+        padding: 7px 12px;
+        margin-bottom: 14px;
+
+        border-radius: 999px;
+
+        background: rgba(255, 107, 53, 0.10);
+        border: 1px solid rgba(255, 107, 53, 0.20);
+
+        color: #ff9a73;
+
+        font-size: 0.77rem;
+        font-weight: 700;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+    }
+
+    .dashboard-title {
+        color: #ffffff;
+        font-weight: 800;
+        letter-spacing: -1px;
+        margin-bottom: 10px;
+    }
+
+    .dashboard-subtitle {
+        color: #94a3b8;
+        max-width: 700px;
+        margin-bottom: 0;
+    }
+
+    .dashboard-grid {
+        margin-top: 8px;
+    }
+
+    .dashboard-panel {
+        height: 100%;
+
+        background: linear-gradient(
+            180deg,
+            #101c32,
+            #0c1729
+        );
+
+        border: 1px solid #1f314d;
+        border-radius: 22px;
+
+        padding: 28px;
+
+        transition:
+            transform 0.25s ease,
+            box-shadow 0.25s ease,
+            border-color 0.25s ease;
+    }
+
+    .dashboard-panel:hover {
+        transform: translateY(-5px);
+
+        border-color: rgba(255, 107, 53, 0.40);
+
+        box-shadow:
+            0 18px 38px rgba(0, 0, 0, 0.24);
+    }
+
+    .dashboard-icon {
+        width: 58px;
+        height: 58px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        margin-bottom: 18px;
+
+        border-radius: 16px;
+
+        background: rgba(255, 107, 53, 0.12);
+        border: 1px solid rgba(255, 107, 53, 0.18);
+
+        font-size: 1.8rem;
+    }
+
+    .dashboard-panel h5 {
+        color: #ffffff;
+        font-weight: 800;
+        margin-bottom: 10px;
+    }
+
+    .dashboard-panel p {
+        color: #94a3b8;
+        line-height: 1.6;
+    }
+
+    .dashboard-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 18px;
+    }
+
+    .btn-dashboard-outline {
+        border: 1px solid #344766;
+        color: #dbeafe;
+        background: transparent;
+    }
+
+    .btn-dashboard-outline:hover {
+        color: #ffffff;
+        background: #17233a;
+        border-color: #526987;
+    }
+
+    .btn-dashboard-success {
+        border: 1px solid rgba(34, 197, 94, 0.45);
+        color: #4ade80;
+        background: rgba(34, 197, 94, 0.08);
+    }
+
+    .btn-dashboard-success:hover {
+        color: #ffffff;
+        background: #16a34a;
+        border-color: #16a34a;
+    }
+
+    .dashboard-footer-note {
+        color: #64748b;
+        font-size: 0.85rem;
+        margin-top: 24px;
+    }
+
+    @media (max-width: 768px) {
+        .dashboard-hero {
+            padding: 32px 24px;
+        }
+
+        .dashboard-title {
+            font-size: 2rem;
+        }
+
+        .dashboard-panel {
+            padding: 24px;
+        }
+    }
+</style>
+{% endblock %}
+
+
+{% block content %}
+
+<div class="dashboard-shell">
+
+    <section class="dashboard-hero">
+
+        <div class="dashboard-label">
+            ✦ Your Workspace
+        </div>
+
+        <h1 class="dashboard-title">
+            Welcome, {{ user.first_name|default:user.username }} 👋
+        </h1>
+
+
+        {% if user.is_superuser or user.role == "admin" %}
+
+            <p class="dashboard-subtitle">
+                Manage your platform, users and event operations
+                from one central workspace.
+            </p>
+
+
+        {% elif user.role == "organizer" %}
+
+            <p class="dashboard-subtitle">
+                Create events, monitor registrations,
+                verify tickets and track attendee performance.
+            </p>
+
+
+        {% else %}
+
+            <p class="dashboard-subtitle">
+                Discover events, manage your bookings
+                and access your confirmed digital tickets.
+            </p>
+
+        {% endif %}
+
+    </section>
+
 
     {% if user.is_superuser or user.role == "admin" %}
-        <p class="text-muted mb-4">
-            Manage your platform and keep every event running smoothly.
-        </p>
 
-        <div class="row g-4">
-            <div class="col-md-6">
-                <div class="card dashboard-card h-100">
-                    <div class="card-body p-4">
-                        <div class="fs-2 mb-3">🛡️</div>
-                        <h5 class="fw-bold">Admin Panel</h5>
-                        <p class="text-muted">
-                            Manage users, organizers, and platform data.
-                        </p>
+        <div class="row g-4 dashboard-grid">
 
-                        <a href="{% url 'admin:index' %}" class="btn btn-primary">
+            <div class="col-lg-6">
+
+                <div class="dashboard-panel">
+
+                    <div class="dashboard-icon">
+                        🛡️
+                    </div>
+
+                    <h5>
+                        Admin Panel
+                    </h5>
+
+                    <p>
+                        Manage users, organizers, categories,
+                        events and platform data.
+                    </p>
+
+                    <div class="dashboard-actions">
+
+                        <a
+                            href="{% url 'admin:index' %}"
+                            class="btn btn-primary px-4"
+                        >
                             Open Admin
                         </a>
+
                     </div>
+
                 </div>
+
             </div>
+
         </div>
+
 
     {% elif user.role == "organizer" %}
-        <p class="text-muted mb-4">
-            Create events, manage registrations, and track your attendees.
-        </p>
 
-        <div class="row g-4">
-            <div class="col-md-6">
-                <div class="card dashboard-card h-100">
-                    <div class="card-body p-4">
-                        <div class="fs-2 mb-3">📅</div>
-                        <h5 class="fw-bold">Event Management</h5>
-                        <p class="text-muted">
-                            Create new events and manage your existing events.
-                        </p>
+        <div class="row g-4 dashboard-grid">
 
-                        <div class="d-flex flex-wrap gap-2">
-                            <a href="{% url 'my_events' %}" class="btn btn-primary">
-                                Manage Events
-                            </a>
 
-                            <a href="{% url 'event_create' %}" class="btn btn-outline-primary">
-                                + Create Event
-                            </a>
-                            <a href="{% url 'verify_ticket' %}" class="btn btn-outline-success">
-                                Verify Ticket
-                            </a>
-                            <a href="{% url 'organizer_analytics' %}" class="btn btn-outline-dark">
-                                View Analytics
-                            </a>
-                        </div>
+            <div class="col-lg-6">
+
+                <div class="dashboard-panel">
+
+                    <div class="dashboard-icon">
+                        📅
                     </div>
+
+                    <h5>
+                        Event Management
+                    </h5>
+
+                    <p>
+                        Create new events and manage your
+                        existing event information.
+                    </p>
+
+                    <div class="dashboard-actions">
+
+                        <a
+                            href="{% url 'my_events' %}"
+                            class="btn btn-primary"
+                        >
+                            Manage Events
+                        </a>
+
+                        <a
+                            href="{% url 'event_create' %}"
+                            class="btn btn-dashboard-outline"
+                        >
+                            + Create Event
+                        </a>
+
+                    </div>
+
                 </div>
+
             </div>
-        </div>
 
-    {% else %}
-        <p class="text-muted mb-4">
-            Discover events, manage your bookings, and access your tickets.
-        </p>
 
-        <div class="row g-4">
-            <div class="col-md-6">
-                <div class="card dashboard-card h-100">
-                    <div class="card-body p-4">
-                        <div class="fs-2 mb-3">🎟️</div>
-                        <h5 class="fw-bold">Explore Events</h5>
-                        <p class="text-muted">
-                            Find events and reserve your seat.
-                        </p>
+            <div class="col-lg-6">
 
-                        <a href="{% url 'event_list' %}" class="btn btn-primary">
+                <div class="dashboard-panel">
+
+                    <div class="dashboard-icon">
+                        🎟️
+                    </div>
+
+                    <h5>
+                        Ticket Operations
+                    </h5>
+
+                    <p>
+                        Verify attendee ticket IDs
+                        and securely check attendees into events.
+                    </p>
+
+                    <div class="dashboard-actions">
+
+                        <a
+                            href="{% url 'verify_ticket' %}"
+                            class="btn btn-dashboard-success"
+                        >
+                            Verify Ticket
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-lg-6">
+
+                <div class="dashboard-panel">
+
+                    <div class="dashboard-icon">
+                        📊
+                    </div>
+
+                    <h5>
+                        Event Analytics
+                    </h5>
+
+                    <p>
+                        Track registrations, confirmed bookings,
+                        waitlists, check-ins and attendance rates.
+                    </p>
+
+                    <div class="dashboard-actions">
+
+                        <a
+                            href="{% url 'organizer_analytics' %}"
+                            class="btn btn-primary"
+                        >
+                            View Analytics
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-lg-6">
+
+                <div class="dashboard-panel">
+
+                    <div class="dashboard-icon">
+                        🌍
+                    </div>
+
+                    <h5>
+                        Public Events
+                    </h5>
+
+                    <p>
+                        View your published events exactly
+                        as attendees see them.
+                    </p>
+
+                    <div class="dashboard-actions">
+
+                        <a
+                            href="{% url 'event_list' %}"
+                            class="btn btn-dashboard-outline"
+                        >
                             Explore Events
                         </a>
+
                     </div>
+
                 </div>
+
             </div>
+
+        </div>
+
+
+    {% else %}
+
+        <div class="row g-4 dashboard-grid">
+
 
             <div class="col-md-6">
-                <div class="card dashboard-card h-100">
-                    <div class="card-body p-4">
-                        <div class="fs-2 mb-3">📋</div>
-                        <h5 class="fw-bold">My Bookings</h5>
-                        <p class="text-muted">
-                            View your registrations and manage upcoming bookings.
-                        </p>
 
-                        <a href="{% url 'my_bookings' %}" class="btn btn-primary">
+                <div class="dashboard-panel">
+
+                    <div class="dashboard-icon">
+                        🔎
+                    </div>
+
+                    <h5>
+                        Explore Events
+                    </h5>
+
+                    <p>
+                        Discover upcoming workshops,
+                        conferences, meetups and other events.
+                    </p>
+
+                    <div class="dashboard-actions">
+
+                        <a
+                            href="{% url 'event_list' %}"
+                            class="btn btn-primary"
+                        >
+                            Explore Events
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-md-6">
+
+                <div class="dashboard-panel">
+
+                    <div class="dashboard-icon">
+                        🎟️
+                    </div>
+
+                    <h5>
+                        My Bookings
+                    </h5>
+
+                    <p>
+                        View registration status,
+                        upcoming events and digital tickets.
+                    </p>
+
+                    <div class="dashboard-actions">
+
+                        <a
+                            href="{% url 'my_bookings' %}"
+                            class="btn btn-primary"
+                        >
                             View My Bookings
                         </a>
+
                     </div>
+
                 </div>
+
             </div>
+
         </div>
+
     {% endif %}
+
+
+    <div class="dashboard-footer-note">
+        EventHub • Discover • Book • Experience
+    </div>
+
 </div>
+
 {% endblock %}

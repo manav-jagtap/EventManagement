@@ -2,65 +2,321 @@
 
 {% block title %}Digital Ticket | EventHub{% endblock %}
 
+{% block extra_css %}
+<style>
+    body {
+        background:
+            radial-gradient(
+                circle at top left,
+                rgba(255, 107, 53, 0.07),
+                transparent 25%
+            ),
+            linear-gradient(
+                180deg,
+                #07101d 0%,
+                #0a1424 45%,
+                #0d1728 100%
+            ) !important;
+    }
+
+    main.container {
+        background: transparent !important;
+    }
+
+    .ticket-shell {
+        padding: 40px 0 60px;
+    }
+
+    .ticket-card {
+        background:
+            linear-gradient(
+                180deg,
+                #101c32,
+                #0c1729
+            );
+
+        border: 1px solid #1f314d;
+        border-radius: 24px;
+
+        box-shadow:
+            0 22px 50px rgba(0, 0, 0, 0.28);
+
+        overflow: hidden;
+    }
+
+    .ticket-card .card-body {
+        padding: 38px;
+    }
+
+    .ticket-icon {
+        width: 68px;
+        height: 68px;
+
+        margin: 0 auto 18px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 18px;
+
+        background: rgba(255, 107, 53, 0.12);
+        border: 1px solid rgba(255, 107, 53, 0.20);
+
+        font-size: 2rem;
+    }
+
+    .ticket-title {
+        color: #ffffff;
+        font-weight: 800;
+        letter-spacing: -0.7px;
+        margin-bottom: 5px;
+    }
+
+    .ticket-subtitle {
+        color: #94a3b8;
+        margin-bottom: 28px;
+    }
+
+    .qr-wrapper {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        padding: 16px;
+
+        background: #ffffff;
+
+        border-radius: 18px;
+
+        box-shadow:
+            0 16px 35px rgba(0, 0, 0, 0.20);
+
+        margin-bottom: 28px;
+    }
+
+    .qr-image {
+        width: 240px;
+        max-width: 100%;
+        height: auto;
+    }
+
+    .ticket-details {
+        background: #111f36;
+        border: 1px solid #263a58;
+        border-radius: 16px;
+
+        padding: 22px;
+
+        text-align: left;
+
+        margin-bottom: 24px;
+    }
+
+    .detail-row {
+        padding: 10px 0;
+        border-bottom: 1px solid #1d2d47;
+    }
+
+    .detail-row:last-child {
+        border-bottom: 0;
+    }
+
+    .detail-label {
+        color: #94a3b8;
+        font-size: 0.78rem;
+        font-weight: 600;
+        margin-bottom: 3px;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+    }
+
+    .detail-value {
+        color: #f8fafc;
+        font-weight: 600;
+    }
+
+    .ticket-code {
+        color: #ec4899;
+        font-size: 0.82rem;
+
+        overflow-wrap: anywhere;
+        word-break: break-word;
+    }
+
+    .confirmed-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+
+        padding: 7px 13px;
+
+        border-radius: 999px;
+
+        color: #86efac;
+        background: rgba(34, 197, 94, 0.10);
+        border: 1px solid rgba(34, 197, 94, 0.22);
+
+        font-size: 0.78rem;
+        font-weight: 800;
+
+        margin-bottom: 20px;
+    }
+
+    .btn-soft {
+        border: 1px solid #40516d;
+        color: #dbeafe;
+        background: transparent;
+    }
+
+    .btn-soft:hover {
+        color: #ffffff;
+        background: #17233a;
+        border-color: #526987;
+    }
+
+    .ticket-note {
+        color: #64748b;
+        font-size: 0.78rem;
+        margin-top: 18px;
+        margin-bottom: 0;
+    }
+
+    @media (max-width: 576px) {
+        .ticket-card .card-body {
+            padding: 24px;
+        }
+
+        .qr-image {
+            width: 200px;
+        }
+    }
+</style>
+{% endblock %}
+
+
 {% block content %}
-<div class="row justify-content-center py-4">
-    <div class="col-lg-7">
-        <div class="card dashboard-card">
-            <div class="card-body p-4 p-md-5 text-center">
 
-                <div class="mb-3 fs-1">🎟️</div>
+<div class="ticket-shell">
 
-                <h2 class="fw-bold mb-1">
-                    {{ registration.event.title }}
-                </h2>
+    <div class="row justify-content-center">
 
-                <p class="text-muted mb-4">
-                    Digital Event Ticket
-                </p>
+        <div class="col-lg-7 col-xl-6">
 
-                <div class="mb-4">
-                    <img
-                        src="data:image/png;base64,{{ qr_image }}"
-                        alt="QR Ticket"
-                        class="img-fluid"
-                        style="max-width: 260px;"
-                    >
-                </div>
+            <div class="ticket-card">
 
-                <div class="border rounded-3 p-3 bg-light mb-4 text-start">
-                    <p class="mb-2">
-                        <strong>Attendee:</strong>
-                        {{ registration.user.get_full_name|default:registration.user.username }}
+                <div class="card-body text-center">
+
+                    <div class="ticket-icon">
+                        🎟️
+                    </div>
+
+                    <h2 class="ticket-title">
+                        {{ registration.event.title }}
+                    </h2>
+
+                    <p class="ticket-subtitle">
+                        Digital Event Ticket
                     </p>
 
-                    <p class="mb-2">
-                        <strong>Date:</strong>
-                        {{ registration.event.start_at|date:"d M Y, h:i A" }}
+
+                    <div class="qr-wrapper">
+
+                        <img
+                            src="data:image/png;base64,{{ qr_image }}"
+                            alt="QR Ticket"
+                            class="qr-image"
+                        >
+
+                    </div>
+
+
+                    <div class="ticket-details">
+
+                        <div class="detail-row">
+
+                            <div class="detail-label">
+                                Attendee
+                            </div>
+
+                            <div class="detail-value">
+                                {{ registration.user.get_full_name|default:registration.user.username }}
+                            </div>
+
+                        </div>
+
+
+                        <div class="detail-row">
+
+                            <div class="detail-label">
+                                Date & Time
+                            </div>
+
+                            <div class="detail-value">
+                                {{ registration.event.start_at|date:"d M Y, h:i A" }}
+                            </div>
+
+                        </div>
+
+
+                        <div class="detail-row">
+
+                            <div class="detail-label">
+                                Venue
+                            </div>
+
+                            <div class="detail-value">
+                                {{ registration.event.venue }},
+                                {{ registration.event.city }}
+                            </div>
+
+                        </div>
+
+
+                        <div class="detail-row">
+
+                            <div class="detail-label">
+                                Ticket ID
+                            </div>
+
+                            <code class="ticket-code">
+                                {{ registration.ticket_code }}
+                            </code>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="confirmed-badge">
+                        ✓ Confirmed Ticket
+                    </div>
+
+
+                    <div>
+
+                        <a
+                            href="{% url 'my_bookings' %}"
+                            class="btn btn-soft px-4"
+                        >
+                            ← Back to My Bookings
+                        </a>
+
+                    </div>
+
+
+                    <p class="ticket-note">
+                        Present this QR ticket at the event check-in desk.
                     </p>
 
-                    <p class="mb-2">
-                        <strong>Venue:</strong>
-                        {{ registration.event.venue }}, {{ registration.event.city }}
-                    </p>
-
-                    <p class="mb-0">
-                        <strong>Ticket ID:</strong><br>
-                        <code>{{ registration.ticket_code }}</code>
-                    </p>
-                </div>
-
-                <span class="badge bg-success mb-3">
-                    Confirmed
-                </span>
-
-                <div>
-                    <a href="{% url 'my_bookings' %}" class="btn btn-outline-primary">
-                        Back to My Bookings
-                    </a>
                 </div>
 
             </div>
+
         </div>
+
     </div>
+
 </div>
+
 {% endblock %}

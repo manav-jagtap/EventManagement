@@ -2,65 +2,461 @@
 
 {% block title %}{{ event.title }} | EventHub{% endblock %}
 
+{% block extra_css %}
+<style>
+    body {
+        background:
+            radial-gradient(
+                circle at top left,
+                rgba(255, 107, 53, 0.07),
+                transparent 25%
+            ),
+            linear-gradient(
+                180deg,
+                #07101d 0%,
+                #0a1424 45%,
+                #0d1728 100%
+            ) !important;
+    }
+
+    main.container {
+        background: transparent !important;
+    }
+
+    .detail-shell {
+        padding: 35px 0 55px;
+    }
+
+    .event-banner {
+        width: 100%;
+        max-height: 430px;
+        object-fit: cover;
+        border-radius: 24px;
+
+        border: 1px solid #1f314d;
+
+        box-shadow:
+            0 18px 40px rgba(0, 0, 0, 0.25);
+    }
+
+    .event-placeholder {
+        height: 330px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        border-radius: 24px;
+
+        background:
+            radial-gradient(
+                circle at center,
+                rgba(255, 107, 53, 0.15),
+                transparent 40%
+            ),
+            linear-gradient(
+                135deg,
+                #101c32,
+                #0c1729
+            );
+
+        border: 1px solid #1f314d;
+
+        font-size: 5rem;
+
+        box-shadow:
+            0 18px 40px rgba(0, 0, 0, 0.22);
+    }
+
+    .event-content {
+        margin-top: 28px;
+    }
+
+    .event-category {
+        display: inline-flex;
+        align-items: center;
+
+        padding: 7px 12px;
+
+        border-radius: 999px;
+
+        background: rgba(255, 107, 53, 0.10);
+        border: 1px solid rgba(255, 107, 53, 0.22);
+
+        color: #ff8d62;
+
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.4px;
+    }
+
+    .event-title {
+        color: #ffffff;
+        font-weight: 800;
+        letter-spacing: -1px;
+        margin-top: 15px;
+        margin-bottom: 8px;
+    }
+
+    .organizer-text {
+        color: #94a3b8;
+    }
+
+    .detail-section {
+        margin-top: 30px;
+    }
+
+    .detail-section h4 {
+        color: #ffffff;
+        font-weight: 800;
+        margin-bottom: 12px;
+    }
+
+    .detail-section p,
+    .detail-section div {
+        color: #aeb9c8;
+        line-height: 1.7;
+    }
+
+    .booking-card {
+        position: sticky;
+        top: 95px;
+
+        background:
+            linear-gradient(
+                180deg,
+                #101c32,
+                #0c1729
+            );
+
+        border: 1px solid #1f314d;
+        border-radius: 22px;
+
+        box-shadow:
+            0 18px 40px rgba(0, 0, 0, 0.24);
+    }
+
+    .booking-card .card-body {
+        padding: 28px;
+    }
+
+    .price-text {
+        color: #ffffff;
+        font-size: 1.8rem;
+        font-weight: 800;
+    }
+
+    .booking-divider {
+        border-color: #223550;
+        opacity: 1;
+        margin: 20px 0;
+    }
+
+    .info-item {
+        padding: 12px 0;
+
+        border-bottom: 1px solid #1d2d47;
+    }
+
+    .info-item:last-of-type {
+        border-bottom: 0;
+    }
+
+    .info-label {
+        color: #e2e8f0;
+        font-weight: 700;
+        margin-bottom: 3px;
+    }
+
+    .info-value {
+        color: #94a3b8;
+        font-size: 0.92rem;
+    }
+
+    .status-confirmed {
+        margin-top: 18px;
+
+        background: rgba(34, 197, 94, 0.10);
+        border: 1px solid rgba(34, 197, 94, 0.20);
+
+        color: #86efac;
+
+        border-radius: 12px;
+        padding: 12px 14px;
+    }
+
+    .status-waitlist {
+        margin-top: 18px;
+
+        background: rgba(219, 39, 119, 0.10);
+        border: 1px solid rgba(219, 39, 119, 0.22);
+
+        color: #ec4899;
+
+        border-radius: 12px;
+        padding: 12px 14px;
+    }
+
+    .btn-soft {
+        border: 1px solid #344766;
+        color: #dbeafe;
+        background: transparent;
+    }
+
+    .btn-soft:hover {
+        color: #ffffff;
+        background: #17233a;
+        border-color: #526987;
+    }
+
+    .seat-highlight {
+        color: #86efac;
+        font-weight: 700;
+    }
+
+    @media (max-width: 991px) {
+        .booking-card {
+            position: static;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .event-placeholder {
+            height: 240px;
+            font-size: 4rem;
+        }
+
+        .booking-card .card-body {
+            padding: 22px;
+        }
+
+        .event-title {
+            font-size: 2rem;
+        }
+    }
+</style>
+{% endblock %}
+
+
 {% block content %}
-<div class="row g-4 py-4">
-    <div class="col-lg-8">
-        {% if event.banner %}
-            <img src="{{ event.banner.url }}" alt="{{ event.title }}"
-                 class="img-fluid rounded-4 w-100" style="max-height: 420px; object-fit: cover;">
-        {% else %}
-            <div class="bg-light rounded-4 d-flex align-items-center justify-content-center"
-                 style="height: 300px; font-size: 5rem;">🎟️</div>
-        {% endif %}
 
-        <div class="mt-4">
-            <span class="badge bg-primary">{{ event.category.name }}</span>
-            <h1 class="fw-bold mt-3">{{ event.title }}</h1>
-            <p class="text-muted">Organized by {{ event.organizer.get_full_name|default:event.organizer.username }}</p>
+<div class="detail-shell">
 
-            <h4 class="fw-bold mt-4">About this event</h4>
-            <div class="text-muted">{{ event.description|linebreaks }}</div>
+    <div class="row g-4">
 
-            <h4 class="fw-bold mt-4">Venue</h4>
-            <p>{{ event.venue }}<br>{{ event.address }}<br>{{ event.city }}</p>
-        </div>
-    </div>
+        <div class="col-lg-8">
 
-    <div class="col-lg-4">
-        <div class="card dashboard-card">
-            <div class="card-body p-4">
-                <h4 class="fw-bold mb-3">
-                    {% if event.is_free %}Free{% else %}₹{{ event.price }}{% endif %}
-                </h4>
-                <hr>
-                <p>📅 <strong>Starts</strong><br>{{ event.start_at|date:"d M Y, h:i A" }}</p>
-                <p>⏰ <strong>Ends</strong><br>{{ event.end_at|date:"d M Y, h:i A" }}</p>
-                <p>📍 <strong>Location</strong><br>{{ event.city }}</p>
-                <p>💺 <strong>Available Seats</strong><br>{{ available_seats }} / {{ event.seat_limit }}</p>
+            {% if event.banner %}
 
-                {% if user_registration %}
-                    {% if user_registration.status == "confirmed" %}
-                        <div class="alert alert-success">Your seat is confirmed.</div>
-                    {% else %}
-                        <div class="alert alert-info">You are on the waitlist.</div>
-                    {% endif %}
-                    <a href="{% url 'my_bookings' %}" class="btn btn-outline-primary w-100">
-                        View My Bookings
-                    </a>
-                {% elif user.is_authenticated and user.role == "attendee" %}
-                    <form method="post" action="{% url 'register_event' event.pk %}">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-primary w-100">
-                            {% if available_seats > 0 %}Register Now{% else %}Join Waitlist{% endif %}
-                        </button>
-                    </form>
-                {% elif not user.is_authenticated %}
-                    <a href="{% url 'login' %}" class="btn btn-primary w-100">
-                        Login to Register
-                    </a>
-                {% endif %}
+                <img
+                    src="{{ event.banner.url }}"
+                    alt="{{ event.title }}"
+                    class="event-banner"
+                >
+
+            {% else %}
+
+                <div class="event-placeholder">
+                    🎟️
+                </div>
+
+            {% endif %}
+
+
+            <div class="event-content">
+
+                <span class="event-category">
+                    {{ event.category.name }}
+                </span>
+
+                <h1 class="event-title">
+                    {{ event.title }}
+                </h1>
+
+                <p class="organizer-text">
+                    Organized by
+                    {{ event.organizer.get_full_name|default:event.organizer.username }}
+                </p>
+
+
+                <div class="detail-section">
+
+                    <h4>
+                        About this event
+                    </h4>
+
+                    <div>
+                        {{ event.description|linebreaks }}
+                    </div>
+
+                </div>
+
+
+                <div class="detail-section">
+
+                    <h4>
+                        Venue
+                    </h4>
+
+                    <p>
+                        📍 {{ event.venue }}<br>
+                        {{ event.address }}<br>
+                        {{ event.city }}
+                    </p>
+
+                </div>
+
             </div>
+
         </div>
+
+
+        <div class="col-lg-4">
+
+            <div class="booking-card">
+
+                <div class="card-body">
+
+                    <div class="price-text">
+
+                        {% if event.is_free %}
+                            Free
+                        {% else %}
+                            ₹{{ event.price }}
+                        {% endif %}
+
+                    </div>
+
+
+                    <hr class="booking-divider">
+
+
+                    <div class="info-item">
+
+                        <div class="info-label">
+                            📅 Starts
+                        </div>
+
+                        <div class="info-value">
+                            {{ event.start_at|date:"d M Y, h:i A" }}
+                        </div>
+
+                    </div>
+
+
+                    <div class="info-item">
+
+                        <div class="info-label">
+                            ⏰ Ends
+                        </div>
+
+                        <div class="info-value">
+                            {{ event.end_at|date:"d M Y, h:i A" }}
+                        </div>
+
+                    </div>
+
+
+                    <div class="info-item">
+
+                        <div class="info-label">
+                            📍 Location
+                        </div>
+
+                        <div class="info-value">
+                            {{ event.city }}
+                        </div>
+
+                    </div>
+
+
+                    <div class="info-item">
+
+                        <div class="info-label">
+                            💺 Available Seats
+                        </div>
+
+                        <div class="info-value">
+                            <span class="seat-highlight">
+                                {{ available_seats }}
+                            </span>
+                            /
+                            {{ event.seat_limit }}
+                        </div>
+
+                    </div>
+
+
+                    {% if user_registration %}
+
+                        {% if user_registration.status == "confirmed" %}
+
+                            <div class="status-confirmed">
+                                ✓ Your seat is confirmed.
+                            </div>
+
+                        {% else %}
+
+                            <div class="status-waitlist">
+                                ⏳ You are on the waitlist.
+                            </div>
+
+                        {% endif %}
+
+
+                        <a
+                            href="{% url 'my_bookings' %}"
+                            class="btn btn-soft w-100 mt-3"
+                        >
+                            View My Bookings
+                        </a>
+
+
+                    {% elif user.is_authenticated and user.role == "attendee" %}
+
+                        <form
+                            method="post"
+                            action="{% url 'register_event' event.pk %}"
+                            class="mt-4"
+                        >
+
+                            {% csrf_token %}
+
+                            <button
+                                type="submit"
+                                class="btn btn-primary w-100 py-2"
+                            >
+
+                                {% if available_seats > 0 %}
+                                    Register Now
+                                {% else %}
+                                    Join Waitlist
+                                {% endif %}
+
+                            </button>
+
+                        </form>
+
+
+                    {% elif not user.is_authenticated %}
+
+                        <a
+                            href="{% url 'login' %}"
+                            class="btn btn-primary w-100 mt-4 py-2"
+                        >
+                            Login to Register
+                        </a>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
     </div>
+
 </div>
+
 {% endblock %}

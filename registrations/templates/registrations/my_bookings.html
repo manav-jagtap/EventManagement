@@ -2,110 +2,439 @@
 
 {% block title %}My Bookings | EventHub{% endblock %}
 
+{% block extra_css %}
+<style>
+    body {
+        background:
+            radial-gradient(
+                circle at top left,
+                rgba(255, 107, 53, 0.07),
+                transparent 25%
+            ),
+            linear-gradient(
+                180deg,
+                #07101d 0%,
+                #0a1424 45%,
+                #0d1728 100%
+            ) !important;
+    }
+
+    main.container {
+        background: transparent !important;
+    }
+
+    .bookings-shell {
+        padding: 35px 0 55px;
+    }
+
+    .page-label {
+        color: #ff8d62;
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        margin-bottom: 6px;
+    }
+
+    .page-title {
+        color: #ffffff;
+        font-weight: 800;
+        letter-spacing: -0.8px;
+        margin-bottom: 6px;
+    }
+
+    .page-subtitle {
+        color: #94a3b8;
+        margin-bottom: 28px;
+    }
+
+    .booking-card {
+        height: 100%;
+
+        background:
+            linear-gradient(
+                180deg,
+                #101c32,
+                #0c1729
+            );
+
+        border: 1px solid #1f314d;
+        border-radius: 22px;
+
+        box-shadow:
+            0 16px 36px rgba(0, 0, 0, 0.20);
+
+        transition:
+            transform 0.25s ease,
+            border-color 0.25s ease,
+            box-shadow 0.25s ease;
+    }
+
+    .booking-card:hover {
+        transform: translateY(-5px);
+
+        border-color: rgba(255, 107, 53, 0.38);
+
+        box-shadow:
+            0 22px 44px rgba(0, 0, 0, 0.28);
+    }
+
+    .booking-card .card-body {
+        padding: 26px;
+    }
+
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+
+        padding: 6px 11px;
+
+        border-radius: 999px;
+
+        font-size: 0.74rem;
+        font-weight: 800;
+    }
+
+    .status-confirmed {
+        color: #86efac;
+        background: rgba(34, 197, 94, 0.10);
+        border: 1px solid rgba(34, 197, 94, 0.22);
+    }
+
+    .status-waitlisted {
+        color: #ec4899;
+        background: rgba(219, 39, 119, 0.10);
+        border: 1px solid rgba(219, 39, 119, 0.24);
+    }
+
+    .status-cancelled {
+        color: #cbd5e1;
+        background: rgba(148, 163, 184, 0.10);
+        border: 1px solid rgba(148, 163, 184, 0.20);
+    }
+
+    .status-message {
+        margin-top: 10px;
+        margin-bottom: 8px;
+
+        font-size: 0.84rem;
+        font-weight: 600;
+    }
+
+    .confirmed-message {
+        color: #86efac;
+    }
+
+    .waitlisted-message {
+        color: #ec4899;
+    }
+
+    .cancelled-message {
+        color: #94a3b8;
+    }
+
+    .event-title {
+        color: #ffffff;
+        font-weight: 800;
+
+        margin-top: 16px;
+        margin-bottom: 12px;
+    }
+
+    .event-meta {
+        color: #94a3b8;
+        font-size: 0.90rem;
+        margin-bottom: 8px;
+    }
+
+    .ticket-box {
+        margin-top: 18px;
+        margin-bottom: 18px;
+
+        padding: 15px;
+
+        border-radius: 14px;
+
+        background: #111f36;
+        border: 1px solid #263a58;
+    }
+
+    .ticket-label {
+        color: #94a3b8;
+        font-size: 0.75rem;
+        margin-bottom: 6px;
+    }
+
+    .ticket-code {
+        display: block;
+
+        color: #f8fafc;
+
+        font-size: 0.78rem;
+
+        overflow-wrap: anywhere;
+        word-break: break-word;
+    }
+
+    .booking-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 9px;
+
+        margin-top: 18px;
+    }
+
+    .btn-details {
+        border: 1px solid #40516d;
+        color: #dbeafe;
+        background: transparent;
+    }
+
+    .btn-details:hover {
+        color: #ffffff;
+        background: #17233a;
+        border-color: #526987;
+    }
+
+    .btn-ticket {
+        color: #ffffff;
+        background: #ff6b35;
+        border: 1px solid #ff6b35;
+    }
+
+    .btn-ticket:hover {
+        color: #ffffff;
+        background: #ea580c;
+        border-color: #ea580c;
+    }
+
+    .btn-cancel {
+        border: 1px solid rgba(239, 68, 68, 0.45);
+        color: #f87171;
+        background: rgba(239, 68, 68, 0.04);
+    }
+
+    .btn-cancel:hover {
+        color: #ffffff;
+        background: #dc2626;
+        border-color: #dc2626;
+    }
+
+    .empty-state {
+        padding: 75px 20px;
+
+        text-align: center;
+
+        background:
+            linear-gradient(
+                180deg,
+                #101c32,
+                #0c1729
+            );
+
+        border: 1px dashed #2a4061;
+        border-radius: 22px;
+    }
+
+    .empty-icon {
+        font-size: 3.5rem;
+        margin-bottom: 15px;
+    }
+
+    .empty-title {
+        color: #ffffff;
+        font-weight: 800;
+    }
+
+    .empty-text {
+        color: #94a3b8;
+    }
+</style>
+{% endblock %}
+
+
 {% block content %}
-<div class="py-4">
-    <h1 class="fw-bold">My Bookings</h1>
-    <p class="text-muted mb-4">
-        Manage your event registrations and tickets.
+
+<div class="bookings-shell">
+
+    <div class="page-label">
+        Attendee Workspace
+    </div>
+
+    <h1 class="page-title">
+        My Bookings
+    </h1>
+
+    <p class="page-subtitle">
+        Manage your event registrations and digital tickets.
     </p>
 
-    <div class="row g-4">
-        {% for registration in registrations %}
-            <div class="col-md-6">
-                <div class="card dashboard-card h-100">
-                    <div class="card-body p-4">
 
-                        <span class="badge
-                            {% if registration.status == 'confirmed' %}
-                                bg-success
-                            {% elif registration.status == 'waitlisted' %}
-                                bg-warning text-dark
-                            {% else %}
-                                bg-secondary
-                            {% endif %}">
-                            {{ registration.get_status_display }}
-                        </span>
+    <div class="row g-4">
+
+        {% for registration in registrations %}
+
+            <div class="col-md-6">
+
+                <div class="booking-card">
+
+                    <div class="card-body">
+
 
                         {% if registration.status == "confirmed" %}
-                            <p class="small text-success mt-2 mb-2">
+
+                            <span class="status-badge status-confirmed">
+                                ✓ Confirmed
+                            </span>
+
+                            <div class="status-message confirmed-message">
                                 Your seat is confirmed for this event.
-                            </p>
+                            </div>
+
+
                         {% elif registration.status == "waitlisted" %}
-                            <p class="small text-warning mt-2 mb-2">
+
+                            <span class="status-badge status-waitlisted">
+                                ⏳ Waitlisted
+                            </span>
+
+                            <div class="status-message waitlisted-message">
                                 You are currently on the waitlist.
-                            </p>
+                            </div>
+
+
                         {% else %}
-                            <p class="small text-muted mt-2 mb-2">
+
+                            <span class="status-badge status-cancelled">
+                                Cancelled
+                            </span>
+
+                            <div class="status-message cancelled-message">
                                 This booking has been cancelled.
-                            </p>
+                            </div>
+
                         {% endif %}
 
-                        <h4 class="fw-bold mt-3">
+
+                        <h4 class="event-title">
                             {{ registration.event.title }}
                         </h4>
 
-                        <p class="text-muted mb-2">
-                            📅 {{ registration.event.start_at|date:"d M Y, h:i A" }}
-                        </p>
 
-                        <p class="text-muted">
-                            📍 {{ registration.event.city }}
-                        </p>
+                        <div class="event-meta">
+                            📅
+                            {{ registration.event.start_at|date:"d M Y, h:i A" }}
+                        </div>
+
+
+                        <div class="event-meta">
+                            📍
+                            {{ registration.event.city }}
+                        </div>
+
 
                         {% if registration.status == "confirmed" %}
-                            <div class="border rounded-3 p-3 bg-light mb-3">
-                                <small class="text-muted d-block mb-1">
+
+                            <div class="ticket-box">
+
+                                <div class="ticket-label">
                                     Digital Ticket ID
-                                </small>
-                                <code class="text-dark">
+                                </div>
+
+                                <code class="ticket-code">
                                     {{ registration.ticket_code }}
                                 </code>
+
                             </div>
+
                         {% endif %}
 
-                        <div class="d-flex flex-wrap gap-2">
 
-                            <a href="{% url 'event_detail' registration.event.slug %}"
-                               class="btn btn-outline-primary btn-sm">
+                        <div class="booking-actions">
+
+                            <a
+                                href="{% url 'event_detail' registration.event.slug %}"
+                                class="btn btn-details btn-sm"
+                            >
                                 Event Details
                             </a>
 
+
                             {% if registration.status == "confirmed" %}
-                                <a href="{% url 'ticket_detail' registration.ticket_code %}"
-                                   class="btn btn-primary btn-sm">
+
+                                <a
+                                    href="{% url 'ticket_detail' registration.ticket_code %}"
+                                    class="btn btn-ticket btn-sm"
+                                >
                                     View Ticket
                                 </a>
+
                             {% endif %}
 
+
                             {% if registration.status != "cancelled" and not registration.checked_in_at %}
-                                <form method="post"
-                                      action="{% url 'cancel_booking' registration.pk %}">
+
+                                <form
+                                    method="post"
+                                    action="{% url 'cancel_booking' registration.pk %}"
+                                >
+
                                     {% csrf_token %}
-                                    <button type="submit"
-                                            class="btn btn-outline-danger btn-sm"
-                                            onclick="return confirm('Cancel this registration?')">
+
+                                    <button
+                                        type="submit"
+                                        class="btn btn-cancel btn-sm"
+                                        onclick="return confirm('Cancel this registration?')"
+                                    >
                                         Cancel
                                     </button>
+
                                 </form>
+
                             {% endif %}
 
                         </div>
+
                     </div>
+
                 </div>
+
             </div>
+
 
         {% empty %}
-            <div class="col-12 text-center py-5">
-                <h4>No bookings yet</h4>
-                <p class="text-muted">
-                    Register for an event to see your bookings here.
-                </p>
 
-                <a href="{% url 'event_list' %}" class="btn btn-primary">
-                    Explore Events
-                </a>
+            <div class="col-12">
+
+                <div class="empty-state">
+
+                    <div class="empty-icon">
+                        🎟️
+                    </div>
+
+                    <h4 class="empty-title">
+                        No bookings yet
+                    </h4>
+
+                    <p class="empty-text">
+                        Register for an event to see your bookings here.
+                    </p>
+
+                    <a
+                        href="{% url 'event_list' %}"
+                        class="btn btn-primary px-4"
+                    >
+                        Explore Events
+                    </a>
+
+                </div>
+
             </div>
+
         {% endfor %}
+
     </div>
+
 </div>
+
 {% endblock %}
