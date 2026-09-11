@@ -2,142 +2,503 @@
 
 {% block title %}Organizer Analytics | EventHub{% endblock %}
 
-{% block content %}
-<div class="py-4">
+{% block extra_css %}
+<style>
+    body {
+        background:
+            radial-gradient(
+                circle at top left,
+                rgba(219, 39, 119, 0.08),
+                transparent 25%
+            ),
+            linear-gradient(
+                180deg,
+                #07101d 0%,
+                #0a1424 45%,
+                #0d1728 100%
+            ) !important;
+    }
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    main.container {
+        background: transparent !important;
+    }
+
+    .analytics-shell {
+        padding: 35px 0 55px;
+    }
+
+    .page-label {
+        color: #ec4899;
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+    }
+
+    .page-title {
+        color: #ffffff;
+        font-weight: 800;
+        letter-spacing: -0.8px;
+    }
+
+    .page-subtitle {
+        color: #94a3b8;
+    }
+
+    .analytics-card {
+        background: linear-gradient(
+            180deg,
+            #101c32,
+            #0c1729
+        );
+
+        border: 1px solid #1f314d;
+        border-radius: 20px;
+
+        box-shadow:
+            0 12px 30px rgba(0, 0, 0, 0.18);
+
+        transition:
+            transform 0.2s ease,
+            border-color 0.2s ease,
+            box-shadow 0.2s ease;
+    }
+
+    .analytics-card:hover {
+        transform: translateY(-4px);
+
+        border-color: rgba(236, 72, 153, 0.45);
+
+        box-shadow:
+            0 18px 38px rgba(0, 0, 0, 0.24);
+    }
+
+
+    /* TOP METRIC CARDS */
+
+    .metric-card {
+        min-height: 112px;
+    }
+
+    .metric-card .card-body {
+        min-height: 112px;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        text-align: center;
+
+        padding: 16px 10px;
+    }
+
+    .metric-label {
+        width: 100%;
+        display: block;
+
+        color: #94a3b8;
+
+        font-size: 0.78rem;
+        text-align: center;
+    }
+
+    .metric-value,
+    .metric-confirmed,
+    .metric-waitlisted,
+    .metric-checked,
+    .metric-attendance {
+        width: 100%;
+
+        margin-bottom: 0;
+
+        text-align: center;
+        font-weight: 800;
+    }
+
+    .metric-value {
+        color: #ffffff;
+    }
+
+    .metric-confirmed {
+        color: #ec4899;
+    }
+
+    .metric-waitlisted {
+        color: #db2777;
+    }
+
+    .metric-checked {
+        color: #86efac;
+    }
+
+    .metric-attendance {
+        color: #ec4899;
+    }
+
+
+    /* HEADINGS */
+
+    .analytics-heading {
+        color: #ffffff;
+        font-weight: 800;
+    }
+
+
+    /* BUTTON */
+
+    .btn-soft {
+        border: 1px solid #344766;
+        color: #dbeafe;
+        background: transparent;
+    }
+
+    .btn-soft:hover {
+        color: #ffffff;
+        background: #17233a;
+        border-color: #526987;
+    }
+
+
+    /* TABLE */
+
+    .analytics-table {
+        color: #dbe4ef;
+    }
+
+    .analytics-table thead th {
+        background: #111f36;
+        color: #cbd5e1;
+
+        border-bottom: 1px solid #263954;
+
+        font-size: 0.82rem;
+        font-weight: 700;
+    }
+
+    .analytics-table tbody td {
+        color: #dbe4ef;
+        border-color: #1d2d47;
+        background: transparent;
+    }
+
+    .analytics-table tbody tr:hover {
+        background: rgba(255, 255, 255, 0.025);
+    }
+
+    .table-confirmed {
+        color: #ec4899 !important;
+        font-weight: 700;
+    }
+
+    .table-waitlisted {
+        color: #db2777 !important;
+        font-weight: 700;
+    }
+
+    .table-checked {
+        color: #86efac !important;
+        font-weight: 700;
+    }
+
+
+    /* ATTENDANCE */
+
+    .attendance-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        min-width: 48px;
+
+        background: #ec4899;
+        color: #ffffff;
+
+        padding: 6px 10px;
+        border-radius: 999px;
+
+        font-size: 0.75rem;
+        font-weight: 800;
+    }
+
+    .chart-empty {
+        color: #94a3b8;
+    }
+
+
+    /* MOBILE */
+
+    @media (max-width: 768px) {
+        .analytics-header {
+            align-items: flex-start !important;
+            flex-direction: column;
+            gap: 16px;
+        }
+    }
+</style>
+{% endblock %}
+
+
+{% block content %}
+
+<div class="analytics-shell">
+
+    <!-- HEADER -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4 analytics-header">
+
         <div>
-            <p class="text-uppercase text-primary fw-semibold small mb-2">
+
+            <div class="page-label mb-2">
                 Organizer Analytics
-            </p>
-            <h1 class="fw-bold mb-1">Performance Overview</h1>
-            <p class="text-muted mb-0">
+            </div>
+
+            <h1 class="page-title mb-1">
+                Performance Overview
+            </h1>
+
+            <p class="page-subtitle mb-0">
                 Track registrations, waitlists, check-ins and attendance.
             </p>
+
         </div>
 
-        <a href="{% url 'my_events' %}" class="btn btn-outline-secondary">
-            Back to Events
+
+        <a
+            href="{% url 'my_events' %}"
+            class="btn btn-soft px-4"
+        >
+            ← Back to Events
         </a>
+
     </div>
+
+
+    <!-- METRICS -->
 
     <div class="row g-3 mb-4">
 
         <div class="col-md-4 col-lg-2">
-            <div class="card dashboard-card h-100">
+
+            <div class="analytics-card metric-card h-100">
+
                 <div class="card-body">
-                    <small class="text-muted">Total Events</small>
-                    <h2 class="fw-bold mt-2">{{ total_events }}</h2>
+
+                    <small class="metric-label">
+                        Total Events
+                    </small>
+
+                    <h2 class="metric-value mt-2">
+                        {{ total_events }}
+                    </h2>
+
                 </div>
+
             </div>
+
         </div>
 
-        <div class="col-md-4 col-lg-2">
-            <div class="card dashboard-card h-100">
-                <div class="card-body">
-                    <small class="text-muted">Registrations</small>
-                    <h2 class="fw-bold mt-2">{{ total_registrations }}</h2>
-                </div>
-            </div>
-        </div>
 
         <div class="col-md-4 col-lg-2">
-            <div class="card dashboard-card h-100">
+
+            <div class="analytics-card metric-card h-100">
+
                 <div class="card-body">
-                    <small class="text-muted">Confirmed</small>
-                    <h2 class="fw-bold mt-2 text-success">
+
+                    <small class="metric-label">
+                        Registrations
+                    </small>
+
+                    <h2 class="metric-value mt-2">
+                        {{ total_registrations }}
+                    </h2>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-md-4 col-lg-2">
+
+            <div class="analytics-card metric-card h-100">
+
+                <div class="card-body">
+
+                    <small class="metric-label">
+                        Confirmed
+                    </small>
+
+                    <h2 class="metric-confirmed mt-2">
                         {{ confirmed_count }}
                     </h2>
+
                 </div>
+
             </div>
+
         </div>
 
+
         <div class="col-md-4 col-lg-2">
-            <div class="card dashboard-card h-100">
+
+            <div class="analytics-card metric-card h-100">
+
                 <div class="card-body">
-                    <small class="text-muted">Waitlisted</small>
-                    <h2 class="fw-bold mt-2 text-warning">
+
+                    <small class="metric-label">
+                        Waitlisted
+                    </small>
+
+                    <h2 class="metric-waitlisted mt-2">
                         {{ waitlisted_count }}
                     </h2>
+
                 </div>
+
             </div>
+
         </div>
 
+
         <div class="col-md-4 col-lg-2">
-            <div class="card dashboard-card h-100">
+
+            <div class="analytics-card metric-card h-100">
+
                 <div class="card-body">
-                    <small class="text-muted">Checked In</small>
-                    <h2 class="fw-bold mt-2 text-primary">
+
+                    <small class="metric-label">
+                        Checked In
+                    </small>
+
+                    <h2 class="metric-checked mt-2">
                         {{ checked_in_count }}
                     </h2>
+
                 </div>
+
             </div>
+
         </div>
 
+
         <div class="col-md-4 col-lg-2">
-            <div class="card dashboard-card h-100">
+
+            <div class="analytics-card metric-card h-100">
+
                 <div class="card-body">
-                    <small class="text-muted">Attendance</small>
-                    <h2 class="fw-bold mt-2">
+
+                    <small class="metric-label">
+                        Attendance
+                    </small>
+
+                    <h2 class="metric-attendance mt-2">
                         {{ attendance_rate }}%
                     </h2>
+
                 </div>
+
             </div>
+
         </div>
 
     </div>
+
+
+    <!-- CHARTS -->
 
     <div class="row g-4 mb-4">
 
         <div class="col-lg-8">
-            <div class="card dashboard-card h-100">
+
+            <div class="analytics-card h-100">
+
                 <div class="card-body p-4">
-                    <h4 class="fw-bold mb-3">Registrations by Event</h4>
+
+                    <h4 class="analytics-heading mb-3">
+                        Registrations by Event
+                    </h4>
 
                     {% if events %}
-                        <canvas id="registrationChart" height="110"></canvas>
+
+                        <canvas
+                            id="registrationChart"
+                            height="110"
+                        ></canvas>
+
                     {% else %}
-                        <p class="text-muted mb-0">
+
+                        <p class="chart-empty mb-0">
                             Create events to see analytics charts.
                         </p>
+
                     {% endif %}
+
                 </div>
+
             </div>
+
         </div>
 
+
         <div class="col-lg-4">
-            <div class="card dashboard-card h-100">
+
+            <div class="analytics-card h-100">
+
                 <div class="card-body p-4">
-                    <h4 class="fw-bold mb-3">Registration Status</h4>
+
+                    <h4 class="analytics-heading mb-3">
+                        Registration Status
+                    </h4>
 
                     {% if total_registrations %}
+
                         <canvas id="statusChart"></canvas>
+
                     {% else %}
-                        <p class="text-muted mb-0">
+
+                        <p class="chart-empty mb-0">
                             Registration data will appear here.
                         </p>
+
                     {% endif %}
+
                 </div>
+
             </div>
+
         </div>
 
     </div>
 
-    <div class="card dashboard-card">
+
+    <!-- EVENT PERFORMANCE -->
+
+    <div class="analytics-card">
+
         <div class="card-body p-4">
 
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <h4 class="fw-bold mb-0">Event Performance</h4>
 
-                <span class="text-muted small">
-                    {{ total_events }} event{{ total_events|pluralize }}
+                <h4 class="analytics-heading mb-0">
+                    Event Performance
+                </h4>
+
+                <span class="metric-label small">
+                    {{ total_events }}
+                    event{{ total_events|pluralize }}
                 </span>
+
             </div>
 
-            <div class="table-responsive">
-                <table class="table align-middle mb-0">
 
-                    <thead class="table-light">
+            <div class="table-responsive">
+
+                <table class="table analytics-table align-middle mb-0">
+
+                    <thead>
+
                         <tr>
                             <th>Event</th>
                             <th>Registrations</th>
@@ -146,50 +507,87 @@
                             <th>Checked In</th>
                             <th>Attendance</th>
                         </tr>
+
                     </thead>
 
-                    <tbody>
-                        {% for event in events %}
-                            <tr>
-                                <td>
-                                    <strong>{{ event.title }}</strong>
 
-                                    <div class="small text-muted">
+                    <tbody>
+
+                        {% for event in events %}
+
+                            <tr>
+
+                                <td>
+
+                                    <strong>
+                                        {{ event.title }}
+                                    </strong>
+
+                                    <div class="small metric-label text-start">
                                         {{ event.start_at|date:"d M Y" }}
                                     </div>
+
                                 </td>
 
-                                <td>{{ event.total_registrations }}</td>
-                                <td>{{ event.confirmed_registrations }}</td>
-                                <td>{{ event.waitlisted_registrations }}</td>
-                                <td>{{ event.checked_in_registrations }}</td>
 
                                 <td>
-                                    <span class="badge bg-primary">
+                                    {{ event.total_registrations }}
+                                </td>
+
+
+                                <td class="table-confirmed">
+                                    {{ event.confirmed_registrations }}
+                                </td>
+
+
+                                <td class="table-waitlisted">
+                                    {{ event.waitlisted_registrations }}
+                                </td>
+
+
+                                <td class="table-checked">
+                                    {{ event.checked_in_registrations }}
+                                </td>
+
+
+                                <td>
+
+                                    <span class="attendance-badge">
                                         {{ event.attendance_rate }}%
                                     </span>
+
                                 </td>
+
                             </tr>
+
 
                         {% empty %}
+
                             <tr>
-                                <td colspan="6"
-                                    class="text-center py-5 text-muted">
 
+                                <td
+                                    colspan="6"
+                                    class="text-center py-5 metric-label"
+                                >
                                     No events available for analytics yet.
-
                                 </td>
+
                             </tr>
+
                         {% endfor %}
+
                     </tbody>
 
                 </table>
+
             </div>
 
         </div>
+
     </div>
 
 </div>
+
 {% endblock %}
 
 
@@ -197,13 +595,17 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+
 {% if events %}
+
 <script>
+
     const eventLabels = [
         {% for event in events %}
             "{{ event.title|escapejs }}",
         {% endfor %}
     ];
+
 
     const registrationData = [
         {% for event in events %}
@@ -211,11 +613,13 @@
         {% endfor %}
     ];
 
+
     const checkedInData = [
         {% for event in events %}
             {{ event.checked_in_registrations }},
         {% endfor %}
     ];
+
 
     new Chart(
         document.getElementById("registrationChart"),
@@ -223,71 +627,196 @@
             type: "bar",
 
             data: {
+
                 labels: eventLabels,
 
                 datasets: [
+
                     {
                         label: "Registrations",
-                        data: registrationData
+
+                        data: registrationData,
+
+                        backgroundColor: "#ec4899",
+                        borderColor: "#ec4899",
+
+                        borderWidth: 1,
+                        borderRadius: 8
                     },
+
                     {
                         label: "Checked In",
-                        data: checkedInData
+
+                        data: checkedInData,
+
+                        backgroundColor: "#86efac",
+                        borderColor: "#86efac",
+
+                        borderWidth: 1,
+                        borderRadius: 8
                     }
+
                 ]
+
             },
 
+
             options: {
+
                 responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            precision: 0
+
+                plugins: {
+
+                    legend: {
+
+                        labels: {
+                            color: "#cbd5e1"
                         }
+
                     }
+
+                },
+
+
+                scales: {
+
+                    x: {
+
+                        ticks: {
+                            color: "#94a3b8"
+                        },
+
+                        grid: {
+                            color: "rgba(148, 163, 184, 0.08)"
+                        }
+
+                    },
+
+
+                    y: {
+
+                        beginAtZero: true,
+
+                        ticks: {
+                            precision: 0,
+                            color: "#94a3b8"
+                        },
+
+                        grid: {
+                            color: "rgba(148, 163, 184, 0.08)"
+                        }
+
+                    }
+
                 }
+
             }
+
         }
     );
+
 </script>
+
 {% endif %}
 
 
 {% if total_registrations %}
+
 <script>
+
+    const statusLabels = [
+
+        {% if confirmed_count > 0 %}
+            "Confirmed",
+        {% endif %}
+
+        {% if waitlisted_count > 0 %}
+            "Waitlisted",
+        {% endif %}
+
+    ];
+
+
+    const statusValues = [
+
+        {% if confirmed_count > 0 %}
+            {{ confirmed_count }},
+        {% endif %}
+
+        {% if waitlisted_count > 0 %}
+            {{ waitlisted_count }},
+        {% endif %}
+
+    ];
+
+
+    const statusColors = [
+
+        {% if confirmed_count > 0 %}
+            "#ec4899",
+        {% endif %}
+
+        {% if waitlisted_count > 0 %}
+            "#db2777",
+        {% endif %}
+
+    ];
+
+
     new Chart(
         document.getElementById("statusChart"),
         {
             type: "doughnut",
 
             data: {
-                labels: [
-                    "Confirmed",
-                    "Waitlisted"
-                ],
+
+                labels: statusLabels,
 
                 datasets: [
+
                     {
-                        data: [
-                            {{ confirmed_count }},
-                            {{ waitlisted_count }}
-                        ]
+                        data: statusValues,
+
+                        backgroundColor: statusColors,
+
+                        borderWidth: 0,
+
+                        hoverOffset: 6
                     }
+
                 ]
+
             },
 
+
             options: {
+
                 responsive: true,
+
+                cutout: "55%",
+
                 plugins: {
+
                     legend: {
-                        position: "bottom"
+
+                        position: "bottom",
+
+                        labels: {
+                            color: "#cbd5e1",
+                            padding: 18
+                        }
+
                     }
+
                 }
+
             }
+
         }
     );
+
 </script>
+
 {% endif %}
 
 {% endblock %}
