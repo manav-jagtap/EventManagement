@@ -1,0 +1,293 @@
+{% extends "accounts/base.html" %}
+
+{% block title %}Organizer Analytics | EventHub{% endblock %}
+
+{% block content %}
+<div class="py-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <p class="text-uppercase text-primary fw-semibold small mb-2">
+                Organizer Analytics
+            </p>
+            <h1 class="fw-bold mb-1">Performance Overview</h1>
+            <p class="text-muted mb-0">
+                Track registrations, waitlists, check-ins and attendance.
+            </p>
+        </div>
+
+        <a href="{% url 'my_events' %}" class="btn btn-outline-secondary">
+            Back to Events
+        </a>
+    </div>
+
+    <div class="row g-3 mb-4">
+
+        <div class="col-md-4 col-lg-2">
+            <div class="card dashboard-card h-100">
+                <div class="card-body">
+                    <small class="text-muted">Total Events</small>
+                    <h2 class="fw-bold mt-2">{{ total_events }}</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 col-lg-2">
+            <div class="card dashboard-card h-100">
+                <div class="card-body">
+                    <small class="text-muted">Registrations</small>
+                    <h2 class="fw-bold mt-2">{{ total_registrations }}</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 col-lg-2">
+            <div class="card dashboard-card h-100">
+                <div class="card-body">
+                    <small class="text-muted">Confirmed</small>
+                    <h2 class="fw-bold mt-2 text-success">
+                        {{ confirmed_count }}
+                    </h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 col-lg-2">
+            <div class="card dashboard-card h-100">
+                <div class="card-body">
+                    <small class="text-muted">Waitlisted</small>
+                    <h2 class="fw-bold mt-2 text-warning">
+                        {{ waitlisted_count }}
+                    </h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 col-lg-2">
+            <div class="card dashboard-card h-100">
+                <div class="card-body">
+                    <small class="text-muted">Checked In</small>
+                    <h2 class="fw-bold mt-2 text-primary">
+                        {{ checked_in_count }}
+                    </h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 col-lg-2">
+            <div class="card dashboard-card h-100">
+                <div class="card-body">
+                    <small class="text-muted">Attendance</small>
+                    <h2 class="fw-bold mt-2">
+                        {{ attendance_rate }}%
+                    </h2>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row g-4 mb-4">
+
+        <div class="col-lg-8">
+            <div class="card dashboard-card h-100">
+                <div class="card-body p-4">
+                    <h4 class="fw-bold mb-3">Registrations by Event</h4>
+
+                    {% if events %}
+                        <canvas id="registrationChart" height="110"></canvas>
+                    {% else %}
+                        <p class="text-muted mb-0">
+                            Create events to see analytics charts.
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card dashboard-card h-100">
+                <div class="card-body p-4">
+                    <h4 class="fw-bold mb-3">Registration Status</h4>
+
+                    {% if total_registrations %}
+                        <canvas id="statusChart"></canvas>
+                    {% else %}
+                        <p class="text-muted mb-0">
+                            Registration data will appear here.
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="card dashboard-card">
+        <div class="card-body p-4">
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4 class="fw-bold mb-0">Event Performance</h4>
+
+                <span class="text-muted small">
+                    {{ total_events }} event{{ total_events|pluralize }}
+                </span>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table align-middle mb-0">
+
+                    <thead class="table-light">
+                        <tr>
+                            <th>Event</th>
+                            <th>Registrations</th>
+                            <th>Confirmed</th>
+                            <th>Waitlisted</th>
+                            <th>Checked In</th>
+                            <th>Attendance</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for event in events %}
+                            <tr>
+                                <td>
+                                    <strong>{{ event.title }}</strong>
+
+                                    <div class="small text-muted">
+                                        {{ event.start_at|date:"d M Y" }}
+                                    </div>
+                                </td>
+
+                                <td>{{ event.total_registrations }}</td>
+                                <td>{{ event.confirmed_registrations }}</td>
+                                <td>{{ event.waitlisted_registrations }}</td>
+                                <td>{{ event.checked_in_registrations }}</td>
+
+                                <td>
+                                    <span class="badge bg-primary">
+                                        {{ event.attendance_rate }}%
+                                    </span>
+                                </td>
+                            </tr>
+
+                        {% empty %}
+                            <tr>
+                                <td colspan="6"
+                                    class="text-center py-5 text-muted">
+
+                                    No events available for analytics yet.
+
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+{% if events %}
+<script>
+    const eventLabels = [
+        {% for event in events %}
+            "{{ event.title|escapejs }}",
+        {% endfor %}
+    ];
+
+    const registrationData = [
+        {% for event in events %}
+            {{ event.total_registrations }},
+        {% endfor %}
+    ];
+
+    const checkedInData = [
+        {% for event in events %}
+            {{ event.checked_in_registrations }},
+        {% endfor %}
+    ];
+
+    new Chart(
+        document.getElementById("registrationChart"),
+        {
+            type: "bar",
+
+            data: {
+                labels: eventLabels,
+
+                datasets: [
+                    {
+                        label: "Registrations",
+                        data: registrationData
+                    },
+                    {
+                        label: "Checked In",
+                        data: checkedInData
+                    }
+                ]
+            },
+
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            precision: 0
+                        }
+                    }
+                }
+            }
+        }
+    );
+</script>
+{% endif %}
+
+
+{% if total_registrations %}
+<script>
+    new Chart(
+        document.getElementById("statusChart"),
+        {
+            type: "doughnut",
+
+            data: {
+                labels: [
+                    "Confirmed",
+                    "Waitlisted"
+                ],
+
+                datasets: [
+                    {
+                        data: [
+                            {{ confirmed_count }},
+                            {{ waitlisted_count }}
+                        ]
+                    }
+                ]
+            },
+
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: "bottom"
+                    }
+                }
+            }
+        }
+    );
+</script>
+{% endif %}
+
+{% endblock %}
