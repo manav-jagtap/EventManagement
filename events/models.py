@@ -28,6 +28,7 @@ class Event(models.Model):
         on_delete=models.PROTECT,
         related_name="organized_events",
     )
+
     category = models.ForeignKey(
         Category,
         on_delete=models.PROTECT,
@@ -35,25 +36,49 @@ class Event(models.Model):
     )
 
     title = models.CharField(max_length=200)
-    slug = models.SlugField(max_length=220, unique=True)
-    description = models.TextField()
-    banner = models.ImageField(upload_to="events/", blank=True, null=True)
 
-    venue = models.CharField(max_length=255)
-    address = models.TextField(blank=True)
-    city = models.CharField(max_length=100)
+    slug = models.SlugField(
+        max_length=220,
+        unique=True,
+    )
+
+    description = models.TextField()
+
+    banner = models.ImageField(
+        upload_to="events/",
+        blank=True,
+        null=True,
+    )
+
+    venue = models.CharField(
+        max_length=255,
+    )
+
+    address = models.TextField(
+        blank=True,
+    )
+
+    city = models.CharField(
+        max_length=100,
+    )
 
     start_at = models.DateTimeField()
+
     end_at = models.DateTimeField()
 
     price = models.DecimalField(
         max_digits=10,
         decimal_places=2,
         default=0,
-        validators=[MinValueValidator(0)],
+        validators=[
+            MinValueValidator(0)
+        ],
     )
+
     seat_limit = models.PositiveIntegerField(
-        validators=[MinValueValidator(1)],
+        validators=[
+            MinValueValidator(1)
+        ],
     )
 
     status = models.CharField(
@@ -62,13 +87,21 @@ class Event(models.Model):
         default=Status.DRAFT,
     )
 
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True,
+    )
 
     class Meta:
         ordering = ["start_at"]
+
         indexes = [
-            models.Index(fields=["status", "start_at"]),
+            models.Index(
+                fields=["status", "start_at"]
+            ),
         ]
 
     def __str__(self):
@@ -76,23 +109,39 @@ class Event(models.Model):
 
     def clean(self):
         super().clean()
+
         errors = {}
 
-        if self.start_at and self.end_at and self.end_at <= self.start_at:
-            errors["end_at"] = "End date and time must be after the start."
+        if (
+            self.start_at
+            and self.end_at
+            and self.end_at <= self.start_at
+        ):
+            errors["end_at"] = (
+                "End date and time must be after the start."
+            )
 
-        if self.start_at and not self.pk and self.start_at <= timezone.now():
-            errors["start_at"] = "A new event must start in the future."
+        if (
+            self.start_at
+            and not self.pk
+            and self.start_at <= timezone.now()
+        ):
+            errors["start_at"] = (
+                "A new event must start in the future."
+            )
 
-        if self.pk and self.seat_limit is not None:
+        if (
+            self.pk
+            and self.seat_limit is not None
+        ):
             confirmed = self.registrations.filter(
                 status="confirmed"
             ).count()
 
             if self.seat_limit < confirmed:
                 errors["seat_limit"] = (
-                    f"Seat limit cannot be less than {confirmed} "
-                    "confirmed bookings."
+                    f"Seat limit cannot be less than "
+                    f"{confirmed} confirmed bookings."
                 )
 
         if errors:
@@ -101,3 +150,51 @@ class Event(models.Model):
     @property
     def is_free(self):
         return self.price == 0
+
+    @property
+    def demo_banner_path(self):
+        demo_banners = {
+            "futuretech-maharashtra-2026":
+                "demo_banners/futuretech_maharashtra_2026.png",
+
+            "python-django-hands-on-bootcamp":
+                "demo_banners/python_django_bootcamp.png",
+
+            "mumbai-live-music-night":
+                "demo_banners/mumbai_live_music_night.png",
+
+            "startup-connect-maharashtra-2026":
+                "demo_banners/startup_connect_maharashtra_2026.png",
+
+            "latur-weekend-football-cup":
+                "demo_banners/latur_weekend_football_cup.png",
+
+            "pune-art-culture-fest":
+                "demo_banners/pune_art_culture_fest.png",
+
+            "nashik-food-music-carnival":
+                "demo_banners/nashik_food_music_carnival.png",
+
+            "nagpur-design-creative-summit":
+                "demo_banners/nagpur_design_creative_summit.png",
+
+            "kolhapur-marathon-fitness-expo":
+                "demo_banners/kolhapur_marathon_fitness_expo.png",
+
+            "heritage-photography-walk":
+                "demo_banners/heritage_photography_walk.png",
+        }
+
+        if self.slug in demo_banners:
+            return demo_banners[self.slug]
+
+        if self.banner:
+            filename = (
+                self.banner.name
+                .replace("\\", "/")
+                .split("/")[-1]
+            )
+
+            return f"demo_banners/{filename}"
+
+        return ""

@@ -69,8 +69,6 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-
-    # WhiteNoise
     "whitenoise.middleware.WhiteNoiseMiddleware",
 
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -160,7 +158,6 @@ LANGUAGE_CODE = "en-us"
 TIME_ZONE = "Asia/Kolkata"
 
 USE_I18N = True
-
 USE_TZ = True
 
 
@@ -171,6 +168,11 @@ USE_TZ = True
 STATIC_URL = "/static/"
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
+
+# Existing project demo banner images
+STATICFILES_DIRS = [
+    ("demo_banners", BASE_DIR / "demo_banners"),
+]
 
 STORAGES = {
     "default": {
@@ -187,7 +189,6 @@ STORAGES = {
 # =========================================================
 
 MEDIA_URL = "/media/"
-
 MEDIA_ROOT = BASE_DIR / "media"
 
 

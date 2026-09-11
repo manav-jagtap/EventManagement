@@ -1,4 +1,6 @@
+
 {% extends "accounts/base.html" %}
+{% load static %}
 {% block title %}Explore Events | EventHub{% endblock %}
 
 {% block extra_css %}
@@ -478,15 +480,15 @@ main.container{background:transparent!important}
 
                     <div class="event-image-wrapper">
 
-                        {% if event.banner %}
-                            <img
-                                src="{{ event.banner.url }}"
-                                class="event-image"
-                                alt="{{ event.title }}"
-                            >
-                        {% else %}
-                            <div class="event-placeholder">🎟️</div>
-                        {% endif %}
+                        {% if event.demo_banner_path %}
+                    <img
+                         src="{% static event.demo_banner_path %}"
+                         class="event-image"
+                         alt="{{ event.title }}"
+                    >
+                    {% else %}
+                        <div class="event-placeholder">🎟️</div>
+                    {% endif %}
 
                     </div>
 
