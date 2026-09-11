@@ -1,23 +1,53 @@
-
 """
 Django settings for Event Management System.
 """
 
+import os
 from pathlib import Path
+
+import dj_database_url
+from dotenv import load_dotenv
+
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-# Security
-# Keep your existing generated SECRET_KEY here.
-SECRET_KEY = 'django-insecure-nz*^wh*u6lw-xwn^vc()dk8yyq(!f-ow*cr$jebh@ez&-s9kup'
-
-DEBUG = True
-
-ALLOWED_HOSTS = []
+load_dotenv(BASE_DIR / ".env")
 
 
-# Applications
+# =========================================================
+# SECURITY
+# =========================================================
+
+SECRET_KEY = os.getenv(
+    "SECRET_KEY",
+    "django-insecure-local-development-key-only"
+)
+
+DEBUG = os.getenv("DEBUG", "True").lower() == "true"
+
+ALLOWED_HOSTS = [
+    host.strip()
+    for host in os.getenv(
+        "ALLOWED_HOSTS",
+        "127.0.0.1,localhost"
+    ).split(",")
+    if host.strip()
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    origin.strip()
+    for origin in os.getenv(
+        "CSRF_TRUSTED_ORIGINS",
+        ""
+    ).split(",")
+    if origin.strip()
+]
+
+
+# =========================================================
+# APPLICATIONS
+# =========================================================
+
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -33,9 +63,16 @@ INSTALLED_APPS = [
 ]
 
 
-# Middleware
+# =========================================================
+# MIDDLEWARE
+# =========================================================
+
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+
+    # WhiteNoise
+    "whitenoise.middleware.WhiteNoiseMiddleware",
+
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -48,7 +85,10 @@ MIDDLEWARE = [
 ROOT_URLCONF = "config.urls"
 
 
-# Templates
+# =========================================================
+# TEMPLATES
+# =========================================================
+
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
@@ -68,16 +108,33 @@ TEMPLATES = [
 WSGI_APPLICATION = "config.wsgi.application"
 
 
-# Database
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+# =========================================================
+# DATABASE
+# =========================================================
+
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+if DATABASE_URL:
+    DATABASES = {
+        "default": dj_database_url.config(
+            default=DATABASE_URL,
+            conn_max_age=600,
+            conn_health_checks=True,
+        )
     }
-}
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
 
 
-# Password validation
+# =========================================================
+# PASSWORD VALIDATION
+# =========================================================
+
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
@@ -94,7 +151,10 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-# Internationalization
+# =========================================================
+# INTERNATIONALIZATION
+# =========================================================
+
 LANGUAGE_CODE = "en-us"
 
 TIME_ZONE = "Asia/Kolkata"
@@ -104,17 +164,46 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files
-STATIC_URL = "static/"
+# =========================================================
+# STATIC FILES
+# =========================================================
+
+STATIC_URL = "/static/"
+
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 
-# Default primary key field type
-DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+# =========================================================
+# MEDIA FILES
+# =========================================================
+
+MEDIA_URL = "/media/"
+
+MEDIA_ROOT = BASE_DIR / "media"
+
+
+# =========================================================
+# AUTHENTICATION
+# =========================================================
 
 AUTH_USER_MODEL = "accounts.User"
 
 LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "dashboard"
 LOGOUT_REDIRECT_URL = "login"
-MEDIA_URL = "media/"
-MEDIA_ROOT = BASE_DIR / "media"
+
+
+# =========================================================
+# DEFAULT PRIMARY KEY
+# =========================================================
+
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
