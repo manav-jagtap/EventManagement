@@ -5,422 +5,430 @@
 
 {% block extra_css %}
 <style>
-    body {
+    .detail-hero {
+        position: relative;
+        overflow: hidden;
+        border-radius: 30px;
+        min-height: 360px;
+        padding: 40px 34px 34px;
+        margin-bottom: 28px;
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        box-shadow: 0 24px 65px rgba(0, 0, 0, 0.30);
         background:
-            radial-gradient(
-                circle at top left,
-                rgba(255, 107, 53, 0.07),
-                transparent 25%
-            ),
             linear-gradient(
-                180deg,
-                #07101d 0%,
-                #0a1424 45%,
-                #0d1728 100%
-            ) !important;
-    }
-
-    main.container {
-        background: transparent !important;
-    }
-
-    .detail-shell {
-        padding: 35px 0 55px;
-    }
-
-    .event-banner {
-        width: 100%;
-        max-height: 430px;
-        object-fit: cover;
-        border-radius: 24px;
-        border: 1px solid #1f314d;
-        box-shadow:
-            0 18px 40px rgba(0, 0, 0, 0.25);
-    }
-
-    .event-placeholder {
-        height: 330px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 24px;
-        background:
-            radial-gradient(
-                circle at center,
-                rgba(255, 107, 53, 0.15),
-                transparent 40%
+                90deg,
+                rgba(5, 9, 18, 0.95) 0%,
+                rgba(7, 10, 19, 0.82) 45%,
+                rgba(7, 10, 19, 0.42) 100%
             ),
-            linear-gradient(
-                135deg,
-                #101c32,
-                #0c1729
-            );
-        border: 1px solid #1f314d;
-        font-size: 5rem;
-        box-shadow:
-            0 18px 40px rgba(0, 0, 0, 0.22);
+            var(--detail-image, linear-gradient(135deg, #0f172a, #0b1120));
+        background-size: cover;
+        background-position: center;
     }
 
-    .event-content {
-        margin-top: 28px;
+    .hero-inner {
+        position: relative;
+        z-index: 2;
+        height: 100%;
     }
 
-    .event-category {
+    .category-pill {
         display: inline-flex;
         align-items: center;
-        padding: 7px 12px;
+        gap: 8px;
+        padding: 9px 16px;
         border-radius: 999px;
-        background: rgba(255, 107, 53, 0.10);
-        border: 1px solid rgba(255, 107, 53, 0.22);
-        color: #ff8d62;
-        font-size: 0.78rem;
+        background: rgba(255, 47, 123, 0.14);
+        border: 1px solid rgba(255, 92, 152, 0.25);
+        color: #ffd0e2;
         font-weight: 700;
-        letter-spacing: 0.4px;
+        font-size: 0.9rem;
+        margin-bottom: 16px;
     }
 
-    .event-title {
-        color: #ffffff;
+    .detail-title {
+        color: white;
+        font-size: clamp(2.2rem, 4vw, 4rem);
+        line-height: 1.04;
         font-weight: 800;
-        letter-spacing: -1px;
-        margin-top: 15px;
-        margin-bottom: 8px;
+        letter-spacing: -1.6px;
+        margin-bottom: 12px;
+        max-width: 760px;
     }
 
     .organizer-text {
-        color: #94a3b8;
+        color: #cbd5e1;
+        font-size: 1rem;
+        margin-bottom: 24px;
     }
 
-    .detail-section {
-        margin-top: 30px;
+    .hero-meta-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
     }
 
-    .detail-section h4 {
-        color: #ffffff;
-        font-weight: 800;
-        margin-bottom: 12px;
+    .hero-meta-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 16px;
+        border-radius: 999px;
+        background: rgba(9, 14, 26, 0.60);
+        border: 1px solid rgba(255, 255, 255, 0.10);
+        color: #e2e8f0;
+        font-weight: 600;
+        backdrop-filter: blur(12px);
     }
 
-    .detail-section p,
-    .detail-section div {
-        color: #aeb9c8;
-        line-height: 1.7;
+    .detail-grid {
+        row-gap: 24px;
+    }
+
+    .content-card,
+    .booking-card {
+        background: linear-gradient(180deg, rgba(10, 15, 28, 0.96), rgba(8, 13, 24, 0.96));
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        border-radius: 26px;
+        box-shadow: 0 18px 50px rgba(0, 0, 0, 0.22);
+    }
+
+    .content-card {
+        padding: 28px;
     }
 
     .booking-card {
         position: sticky;
-        top: 95px;
-        background:
-            linear-gradient(
-                180deg,
-                #101c32,
-                #0c1729
-            );
-        border: 1px solid #1f314d;
-        border-radius: 22px;
-        box-shadow:
-            0 18px 40px rgba(0, 0, 0, 0.24);
+        top: 104px;
+        overflow: hidden;
     }
 
     .booking-card .card-body {
         padding: 28px;
     }
 
-    .price-text {
-        color: #ffffff;
-        font-size: 1.8rem;
+    .section-title {
+        color: white;
         font-weight: 800;
+        margin-bottom: 14px;
+        letter-spacing: -0.4px;
     }
 
-    .booking-divider {
-        border-color: #223550;
+    .body-text,
+    .body-text p {
+        color: #aeb9c8;
+        line-height: 1.8;
+    }
+
+    .info-block {
+        margin-top: 28px;
+    }
+
+    .info-list {
+        display: grid;
+        gap: 14px;
+        margin-top: 16px;
+    }
+
+    .info-card {
+        padding: 18px 18px;
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .info-card .label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #f8fafc;
+        font-weight: 700;
+        margin-bottom: 8px;
+    }
+
+    .info-card .value {
+        color: #94a3b8;
+        line-height: 1.7;
+    }
+
+    .price-text {
+        color: white;
+        font-size: 2rem;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+    }
+
+    .divider {
+        border-color: rgba(255, 255, 255, 0.08);
         opacity: 1;
-        margin: 20px 0;
+        margin: 18px 0;
     }
 
-    .info-item {
-        padding: 12px 0;
-        border-bottom: 1px solid #1d2d47;
+    .booking-line {
+        padding: 14px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.07);
     }
 
-    .info-item:last-of-type {
+    .booking-line:last-of-type {
         border-bottom: 0;
     }
 
-    .info-label {
-        color: #e2e8f0;
+    .booking-label {
+        color: #f8fafc;
         font-weight: 700;
-        margin-bottom: 3px;
+        margin-bottom: 4px;
     }
 
-    .info-value {
+    .booking-value {
         color: #94a3b8;
-        font-size: 0.92rem;
-    }
-
-    .status-confirmed {
-        margin-top: 18px;
-        background: rgba(34, 197, 94, 0.10);
-        border: 1px solid rgba(34, 197, 94, 0.20);
-        color: #86efac;
-        border-radius: 12px;
-        padding: 12px 14px;
-    }
-
-    .status-waitlist {
-        margin-top: 18px;
-        background: rgba(219, 39, 119, 0.10);
-        border: 1px solid rgba(219, 39, 119, 0.22);
-        color: #ec4899;
-        border-radius: 12px;
-        padding: 12px 14px;
-    }
-
-    .btn-soft {
-        border: 1px solid #344766;
-        color: #dbeafe;
-        background: transparent;
-    }
-
-    .btn-soft:hover {
-        color: #ffffff;
-        background: #17233a;
-        border-color: #526987;
+        line-height: 1.6;
     }
 
     .seat-highlight {
-        color: #86efac;
-        font-weight: 700;
+        color: #4ade80;
+        font-weight: 800;
     }
 
-    @media (max-width: 991px) {
+    .status-confirmed,
+    .status-waitlist {
+        margin-top: 18px;
+        padding: 13px 14px;
+        border-radius: 14px;
+        font-weight: 600;
+    }
+
+    .status-confirmed {
+        background: rgba(34, 197, 94, 0.10);
+        border: 1px solid rgba(34, 197, 94, 0.20);
+        color: #bbf7d0;
+    }
+
+    .status-waitlist {
+        background: rgba(236, 72, 153, 0.10);
+        border: 1px solid rgba(236, 72, 153, 0.20);
+        color: #f9a8d4;
+    }
+@media (max-width: 991px) {
         .booking-card {
             position: static;
+        }
+
+        .detail-hero {
+            min-height: auto;
+            padding: 28px 20px;
+        }
+
+        .content-card {
+            padding: 22px;
         }
     }
 
     @media (max-width: 576px) {
-        .event-placeholder {
-            height: 240px;
-            font-size: 4rem;
+        .detail-title {
+            letter-spacing: -1px;
         }
 
         .booking-card .card-body {
             padding: 22px;
-        }
-
-        .event-title {
-            font-size: 2rem;
         }
     }
 </style>
 {% endblock %}
 
 {% block content %}
+<div
+    class="detail-hero"
+    {% if event.demo_banner_path %}
+        style="--detail-image: url('{% static event.demo_banner_path %}');"
+    {% elif event.banner %}
+        style="--detail-image: url('{{ event.banner.url }}');"
+    {% endif %}
+>
+    <div class="hero-inner d-flex flex-column justify-content-end h-100">
+        <span class="category-pill">
+            <i class="bi bi-grid"></i>
+            {{ event.category.name }}
+        </span>
 
-<div class="detail-shell">
+        <h1 class="detail-title">
+            {{ event.title }}
+        </h1>
 
-    <div class="row g-4">
-
-        <div class="col-lg-8">
-
-            {% if event.demo_banner_path %}
-
-                <img
-                    src="{% static event.demo_banner_path %}"
-                    alt="{{ event.title }}"
-                    class="event-banner"
-                >
-
-            {% else %}
-
-                <div class="event-placeholder">
-                    🎟️
-                </div>
-
-            {% endif %}
-
-            <div class="event-content">
-
-                <span class="event-category">
-                    {{ event.category.name }}
-                </span>
-
-                <h1 class="event-title">
-                    {{ event.title }}
-                </h1>
-
-                <p class="organizer-text">
-                    Organized by
-                    {{ event.organizer.get_full_name|default:event.organizer.username }}
-                </p>
-
-                <div class="detail-section">
-
-                    <h4>
-                        About this event
-                    </h4>
-
-                    <div>
-                        {{ event.description|linebreaks }}
-                    </div>
-
-                </div>
-
-                <div class="detail-section">
-
-                    <h4>
-                        Venue
-                    </h4>
-
-                    <p>
-                        📍 {{ event.venue }}<br>
-                        {{ event.address }}<br>
-                        {{ event.city }}
-                    </p>
-
-                </div>
-
-            </div>
-
+        <div class="organizer-text">
+            Organized by
+            {{ event.organizer.get_full_name|default:event.organizer.username }}
         </div>
 
-        <div class="col-lg-4">
+        <div class="hero-meta-row">
+            <span class="hero-meta-pill">
+                <i class="bi bi-calendar-event"></i>
+                {{ event.start_at|date:"d M Y, h:i A" }}
+            </span>
 
-            <div class="booking-card">
+            <span class="hero-meta-pill">
+                <i class="bi bi-geo-alt"></i>
+                {{ event.city }}
+            </span>
 
-                <div class="card-body">
-
-                    <div class="price-text">
-
-                        {% if event.is_free %}
-                            Free
-                        {% else %}
-                            ₹{{ event.price }}
-                        {% endif %}
-
-                    </div>
-
-                    <hr class="booking-divider">
-
-                    <div class="info-item">
-
-                        <div class="info-label">
-                            📅 Starts
-                        </div>
-
-                        <div class="info-value">
-                            {{ event.start_at|date:"d M Y, h:i A" }}
-                        </div>
-
-                    </div>
-
-                    <div class="info-item">
-
-                        <div class="info-label">
-                            ⏰ Ends
-                        </div>
-
-                        <div class="info-value">
-                            {{ event.end_at|date:"d M Y, h:i A" }}
-                        </div>
-
-                    </div>
-
-                    <div class="info-item">
-
-                        <div class="info-label">
-                            📍 Location
-                        </div>
-
-                        <div class="info-value">
-                            {{ event.city }}
-                        </div>
-
-                    </div>
-
-                    <div class="info-item">
-
-                        <div class="info-label">
-                            💺 Available Seats
-                        </div>
-
-                        <div class="info-value">
-                            <span class="seat-highlight">
-                                {{ available_seats }}
-                            </span>
-                            /
-                            {{ event.seat_limit }}
-                        </div>
-
-                    </div>
-
-                    {% if user_registration %}
-
-                        {% if user_registration.status == "confirmed" %}
-
-                            <div class="status-confirmed">
-                                ✓ Your seat is confirmed.
-                            </div>
-
-                        {% else %}
-
-                            <div class="status-waitlist">
-                                ⏳ You are on the waitlist.
-                            </div>
-
-                        {% endif %}
-
-                        <a
-                            href="{% url 'my_bookings' %}"
-                            class="btn btn-soft w-100 mt-3"
-                        >
-                            View My Bookings
-                        </a>
-
-                    {% elif user.is_authenticated and user.role == "attendee" %}
-
-                        <form
-                            method="post"
-                            action="{% url 'register_event' event.pk %}"
-                            class="mt-4"
-                        >
-
-                            {% csrf_token %}
-
-                            <button
-                                type="submit"
-                                class="btn btn-primary w-100 py-2"
-                            >
-
-                                {% if available_seats > 0 %}
-                                    Register Now
-                                {% else %}
-                                    Join Waitlist
-                                {% endif %}
-
-                            </button>
-
-                        </form>
-
-                    {% elif not user.is_authenticated %}
-
-                        <a
-                            href="{% url 'login' %}"
-                            class="btn btn-primary w-100 mt-4 py-2"
-                        >
-                            Login to Register
-                        </a>
-
-                    {% endif %}
-
-                </div>
-
-            </div>
-
+            <span class="hero-meta-pill">
+                <i class="bi bi-people"></i>
+                {{ available_seats }} / {{ event.seat_limit }} seats
+            </span>
         </div>
-
     </div>
-
 </div>
 
+<div class="row detail-grid">
+    <div class="col-lg-8">
+        <div class="content-card">
+            <h3 class="section-title">About this event</h3>
+
+            <div class="body-text">
+                {{ event.description|linebreaks }}
+            </div>
+
+            <div class="info-block">
+                <h4 class="section-title">Venue</h4>
+
+                <div class="info-list">
+                    <div class="info-card">
+                        <div class="label">
+                            <i class="bi bi-building"></i>
+                            Venue
+                        </div>
+                        <div class="value">
+                            {{ event.venue }}
+                        </div>
+                    </div>
+
+                    <div class="info-card">
+                        <div class="label">
+                            <i class="bi bi-pin-map"></i>
+                            Address
+                        </div>
+                        <div class="value">
+                            {% if event.address %}
+                                {{ event.address }}<br>
+                            {% endif %}
+                            {{ event.city }}
+                        </div>
+                    </div>
+
+                    <div class="info-card">
+                        <div class="label">
+                            <i class="bi bi-clock-history"></i>
+                            Event Timing
+                        </div>
+                        <div class="value">
+                            Starts: {{ event.start_at|date:"d M Y, h:i A" }}<br>
+                            Ends: {{ event.end_at|date:"d M Y, h:i A" }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="booking-card">
+            <div class="card-body">
+                <div class="price-text">
+                    {% if event.is_free %}
+                        Free
+                    {% else %}
+                        ₹{{ event.price }}
+                    {% endif %}
+                </div>
+
+                <hr class="divider">
+
+                <div class="booking-line">
+                    <div class="booking-label">
+                        <i class="bi bi-calendar-event"></i> Starts
+                    </div>
+                    <div class="booking-value">
+                        {{ event.start_at|date:"d M Y, h:i A" }}
+                    </div>
+                </div>
+
+                <div class="booking-line">
+                    <div class="booking-label">
+                        <i class="bi bi-clock"></i> Ends
+                    </div>
+                    <div class="booking-value">
+                        {{ event.end_at|date:"d M Y, h:i A" }}
+                    </div>
+                </div>
+
+                <div class="booking-line">
+                    <div class="booking-label">
+                        <i class="bi bi-geo-alt"></i> Location
+                    </div>
+                    <div class="booking-value">
+                        {{ event.city }}
+                    </div>
+                </div>
+
+                <div class="booking-line">
+                    <div class="booking-label">
+                        <i class="bi bi-people"></i> Available Seats
+                    </div>
+                    <div class="booking-value">
+                        <span class="seat-highlight">{{ available_seats }}</span> / {{ event.seat_limit }}
+                    </div>
+                </div>
+
+                {% if user_registration %}
+
+                    {% if user_registration.status == "confirmed" %}
+                        <div class="status-confirmed">
+                            ✓ Your seat is confirmed.
+                        </div>
+                    {% else %}
+                        <div class="status-waitlist">
+                            ⏳ You are on the waitlist.
+                        </div>
+                    {% endif %}
+
+                    <a
+                        href="{% url 'my_bookings' %}"
+                        class="btn btn-outline-light w-100 mt-3"
+                    >
+                        View My Bookings
+                    </a>
+
+                {% elif user.is_authenticated and user.role == "attendee" %}
+
+                    <form
+                        method="post"
+                        action="{% url 'register_event' event.pk %}"
+                        class="mt-4"
+                    >
+                        {% csrf_token %}
+                        <button
+                            type="submit"
+                            class="btn btn-primary w-100 py-3"
+                        >
+                            {% if available_seats > 0 %}
+                                Register Now
+                            {% else %}
+                                Join Waitlist
+                            {% endif %}
+                        </button>
+                    </form>
+
+                {% elif not user.is_authenticated %}
+
+                    <a
+                        href="{% url 'login' %}"
+                        class="btn btn-primary w-100 py-3 mt-4"
+                    >
+                        Login to Register
+                    </a>
+
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

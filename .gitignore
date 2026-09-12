@@ -1,12 +1,25 @@
+# Virtual environments
 .venv/
 venv/
+
+# Python
 __pycache__/
 *.py[cod]
-db.sqlite3
+
+# Local environment and database
 .env
 .env.*
 !.env.example
+db.sqlite3
+
+# Generated files
 media/
 staticfiles/
+
+# IDE
 .idea/
+
+# Temporary project files
 demo_seed/
+demo_banners_backup/
+*.log

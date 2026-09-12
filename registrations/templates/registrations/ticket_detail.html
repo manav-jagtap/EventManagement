@@ -5,18 +5,7 @@
 {% block extra_css %}
 <style>
     body {
-        background:
-            radial-gradient(
-                circle at top left,
-                rgba(255, 107, 53, 0.07),
-                transparent 25%
-            ),
-            linear-gradient(
-                180deg,
-                #07101d 0%,
-                #0a1424 45%,
-                #0d1728 100%
-            ) !important;
+        background: #0a0a0d !important;
     }
 
     main.container {
@@ -24,98 +13,79 @@
     }
 
     .ticket-shell {
-        padding: 40px 0 60px;
+        padding: 32px 0 60px;
     }
 
     .ticket-card {
-        background:
-            linear-gradient(
-                180deg,
-                #101c32,
-                #0c1729
-            );
-
-        border: 1px solid #1f314d;
-        border-radius: 24px;
-
-        box-shadow:
-            0 22px 50px rgba(0, 0, 0, 0.28);
-
         overflow: hidden;
+        background: #121217;
+        border: 1px solid #2a2a32;
+        border-radius: 22px;
+        box-shadow: 0 22px 50px rgba(0,0,0,.30);
     }
 
     .ticket-card .card-body {
-        padding: 38px;
+        padding: 36px;
     }
 
     .ticket-icon {
-        width: 68px;
-        height: 68px;
-
+        width: 64px;
+        height: 64px;
         margin: 0 auto 18px;
-
         display: flex;
         align-items: center;
         justify-content: center;
-
-        border-radius: 18px;
-
-        background: rgba(255, 107, 53, 0.12);
-        border: 1px solid rgba(255, 107, 53, 0.20);
-
-        font-size: 2rem;
+        border-radius: 16px;
+        background: linear-gradient(
+            135deg,
+            rgba(244,63,94,.16),
+            rgba(236,72,153,.08)
+        );
+        border: 1px solid rgba(244,63,94,.20);
+        font-size: 1.9rem;
     }
 
     .ticket-title {
-        color: #ffffff;
-        font-weight: 800;
-        letter-spacing: -0.7px;
         margin-bottom: 5px;
+        color: #fff;
+        font-weight: 800;
+        letter-spacing: -.7px;
     }
 
     .ticket-subtitle {
-        color: #94a3b8;
-        margin-bottom: 28px;
+        margin-bottom: 26px;
+        color: #92929d;
     }
 
     .qr-wrapper {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-
-        padding: 16px;
-
-        background: #ffffff;
-
-        border-radius: 18px;
-
-        box-shadow:
-            0 16px 35px rgba(0, 0, 0, 0.20);
-
-        margin-bottom: 28px;
+        margin-bottom: 26px;
+        padding: 15px;
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 16px 35px rgba(0,0,0,.24);
     }
 
     .qr-image {
-        width: 240px;
+        width: 230px;
         max-width: 100%;
         height: auto;
     }
 
     .ticket-details {
-        background: #111f36;
-        border: 1px solid #263a58;
-        border-radius: 16px;
-
-        padding: 22px;
-
-        text-align: left;
-
         margin-bottom: 24px;
+        padding: 20px;
+        text-align: left;
+        background: #18181f;
+        border: 1px solid #303038;
+        border-radius: 15px;
     }
 
     .detail-row {
         padding: 10px 0;
-        border-bottom: 1px solid #1d2d47;
+        border-bottom: 1px solid #292930;
     }
 
     .detail-row:last-child {
@@ -123,23 +93,22 @@
     }
 
     .detail-label {
-        color: #94a3b8;
-        font-size: 0.78rem;
-        font-weight: 600;
         margin-bottom: 3px;
+        color: #71717a;
+        font-size: .75rem;
+        font-weight: 700;
         text-transform: uppercase;
-        letter-spacing: 0.4px;
+        letter-spacing: .5px;
     }
 
     .detail-value {
-        color: #f8fafc;
+        color: #f4f4f5;
         font-weight: 600;
     }
 
     .ticket-code {
-        color: #ec4899;
-        font-size: 0.82rem;
-
+        color: #f472b6;
+        font-size: .82rem;
         overflow-wrap: anywhere;
         word-break: break-word;
     }
@@ -148,52 +117,37 @@
         display: inline-flex;
         align-items: center;
         gap: 6px;
-
-        padding: 7px 13px;
-
-        border-radius: 999px;
-
-        color: #86efac;
-        background: rgba(34, 197, 94, 0.10);
-        border: 1px solid rgba(34, 197, 94, 0.22);
-
-        font-size: 0.78rem;
-        font-weight: 800;
-
         margin-bottom: 20px;
+        padding: 7px 13px;
+        border-radius: 999px;
+        color: #86efac;
+        background: rgba(34,197,94,.10);
+        border: 1px solid rgba(34,197,94,.22);
+        font-size: .78rem;
+        font-weight: 800;
     }
-
-    .btn-soft {
-        border: 1px solid #40516d;
-        color: #dbeafe;
-        background: transparent;
-    }
-
-    .btn-soft:hover {
-        color: #ffffff;
-        background: #17233a;
-        border-color: #526987;
-    }
-
-    .ticket-note {
-        color: #64748b;
-        font-size: 0.78rem;
+.ticket-note {
         margin-top: 18px;
         margin-bottom: 0;
+        color: #62626d;
+        font-size: .78rem;
     }
 
     @media (max-width: 576px) {
+        .ticket-shell {
+            padding-top: 14px;
+        }
+
         .ticket-card .card-body {
             padding: 24px;
         }
 
         .qr-image {
-            width: 200px;
+            width: 195px;
         }
     }
 </style>
 {% endblock %}
-
 
 {% block content %}
 
@@ -219,7 +173,6 @@
                         Digital Event Ticket
                     </p>
 
-
                     <div class="qr-wrapper">
 
                         <img
@@ -229,7 +182,6 @@
                         >
 
                     </div>
-
 
                     <div class="ticket-details">
 
@@ -245,7 +197,6 @@
 
                         </div>
 
-
                         <div class="detail-row">
 
                             <div class="detail-label">
@@ -257,7 +208,6 @@
                             </div>
 
                         </div>
-
 
                         <div class="detail-row">
 
@@ -271,7 +221,6 @@
                             </div>
 
                         </div>
-
 
                         <div class="detail-row">
 
@@ -287,23 +236,20 @@
 
                     </div>
 
-
                     <div class="confirmed-badge">
                         ✓ Confirmed Ticket
                     </div>
-
 
                     <div>
 
                         <a
                             href="{% url 'my_bookings' %}"
-                            class="btn btn-soft px-4"
+                            class="btn btn-outline-light px-4"
                         >
                             ← Back to My Bookings
                         </a>
 
                     </div>
-
 
                     <p class="ticket-note">
                         Present this QR ticket at the event check-in desk.

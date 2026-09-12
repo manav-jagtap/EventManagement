@@ -5,18 +5,7 @@
 {% block extra_css %}
 <style>
     body {
-        background:
-            radial-gradient(
-                circle at top left,
-                rgba(255, 107, 53, 0.08),
-                transparent 25%
-            ),
-            linear-gradient(
-                180deg,
-                #07101d 0%,
-                #0a1424 45%,
-                #0d1728 100%
-            ) !important;
+        background: #0a0a0d !important;
     }
 
     main.container {
@@ -24,7 +13,7 @@
     }
 
     .events-shell {
-        padding: 35px 0 55px;
+        padding: 28px 0 55px;
     }
 
     .events-header {
@@ -33,154 +22,126 @@
         align-items: center;
         gap: 20px;
         flex-wrap: wrap;
-
-        margin-bottom: 26px;
+        margin-bottom: 24px;
     }
 
     .page-label {
-        color: #ff8d62;
-        font-size: 0.78rem;
-        font-weight: 700;
+        margin-bottom: 6px;
+        color: #f43f5e;
+        font-size: .76rem;
+        font-weight: 800;
         letter-spacing: 1px;
         text-transform: uppercase;
-        margin-bottom: 6px;
     }
 
     .page-title {
-        color: #ffffff;
-        font-weight: 800;
-        letter-spacing: -0.8px;
         margin-bottom: 6px;
+        color: #fff;
+        font-weight: 800;
+        letter-spacing: -.8px;
     }
 
     .page-subtitle {
-        color: #94a3b8;
         margin-bottom: 0;
+        color: #92929d;
     }
 
     .events-card {
-        background: linear-gradient(
-            180deg,
-            #101c32,
-            #0c1729
-        );
-
-        border: 1px solid #1f314d;
-        border-radius: 22px;
         overflow: hidden;
-
-        box-shadow:
-            0 18px 40px rgba(0, 0, 0, 0.22);
+        background: #121217;
+        border: 1px solid #2a2a32;
+        border-radius: 20px;
+        box-shadow: 0 18px 40px rgba(0,0,0,.24);
     }
 
     .events-table {
         margin-bottom: 0;
-        color: #e2e8f0;
+        color: #e4e4e7;
     }
 
     .events-table thead th {
-        background: #111f36;
-        color: #cbd5e1;
-
-        border-bottom: 1px solid #263954;
-
-        font-size: 0.82rem;
-        font-weight: 700;
-        letter-spacing: 0.4px;
-
         padding-top: 16px;
         padding-bottom: 16px;
+        background: #18181f;
+        color: #a1a1aa;
+        border-bottom: 1px solid #2a2a32;
+        font-size: .8rem;
+        font-weight: 700;
+        letter-spacing: .4px;
+        text-transform: uppercase;
     }
 
     .events-table tbody td {
-        background: transparent;
-        color: #dbe4ef;
-
-        border-color: #1d2d47;
-
         padding-top: 18px;
         padding-bottom: 18px;
+        background: transparent;
+        color: #d4d4d8;
+        border-color: #27272f;
     }
 
     .events-table tbody tr {
-        transition:
-            background-color 0.2s ease;
+        transition: .2s ease;
     }
 
     .events-table tbody tr:hover {
-        background: rgba(255, 255, 255, 0.025);
+        background: #17171d;
     }
 
     .event-name {
-        color: #ffffff;
+        color: #fff;
         font-weight: 700;
     }
 
     .event-category {
-        color: #94a3b8;
+        color: #8f8f99;
     }
 
     .status-badge {
         display: inline-flex;
         align-items: center;
-
         padding: 6px 10px;
         border-radius: 999px;
-
-        font-size: 0.75rem;
+        font-size: .74rem;
         font-weight: 700;
     }
 
     .status-published {
-        background: rgba(34, 197, 94, 0.12);
-        color: #4ade80;
-        border: 1px solid rgba(34, 197, 94, 0.20);
+        background: rgba(34,197,94,.10);
+        color: #86efac;
+        border: 1px solid rgba(34,197,94,.22);
     }
 
     .status-cancelled {
-        background: rgba(239, 68, 68, 0.12);
-        color: #f87171;
-        border: 1px solid rgba(239, 68, 68, 0.20);
+        background: rgba(239,68,68,.10);
+        color: #fca5a5;
+        border: 1px solid rgba(239,68,68,.22);
     }
 
     .status-draft {
-        background: rgba(148, 163, 184, 0.12);
-        color: #cbd5e1;
-        border: 1px solid rgba(148, 163, 184, 0.20);
+        background: rgba(161,161,170,.10);
+        color: #d4d4d8;
+        border: 1px solid rgba(161,161,170,.20);
     }
-
-    .btn-soft {
-        border: 1px solid #344766;
-        color: #dbeafe;
-        background: transparent;
-    }
-
-    .btn-soft:hover {
-        color: #ffffff;
-        background: #17233a;
-        border-color: #526987;
-    }
-
-    .btn-edit {
-        border: 1px solid rgba(255, 107, 53, 0.45);
-        color: #ff8d62;
-        background: rgba(255, 107, 53, 0.06);
+.btn-edit {
+        border: 1px solid rgba(244,63,94,.40);
+        color: #fb7185;
+        background: rgba(244,63,94,.07);
     }
 
     .btn-edit:hover {
-        color: #ffffff;
-        background: #ff6b35;
-        border-color: #ff6b35;
+        color: #fff;
+        background: #f43f5e;
+        border-color: #f43f5e;
     }
 
     .btn-delete {
-        border: 1px solid rgba(239, 68, 68, 0.40);
+        border: 1px solid rgba(239,68,68,.38);
         color: #f87171;
-        background: rgba(239, 68, 68, 0.06);
+        background: rgba(239,68,68,.06);
     }
 
     .btn-delete:hover {
-        color: #ffffff;
+        color: #fff;
         background: #dc2626;
         border-color: #dc2626;
     }
@@ -191,33 +152,40 @@
     }
 
     .empty-icon {
-        font-size: 3rem;
         margin-bottom: 14px;
+        font-size: 3rem;
     }
 
     .empty-title {
-        color: #ffffff;
-        font-weight: 700;
         margin-bottom: 8px;
+        color: #fff;
+        font-weight: 700;
     }
 
     .empty-text {
-        color: #94a3b8;
+        color: #92929d;
     }
 
     @media (max-width: 768px) {
+        .events-shell {
+            padding-top: 14px;
+        }
+
         .events-header {
-            align-items: flex-start;
             flex-direction: column;
+            align-items: flex-start;
         }
 
         .events-header .btn {
             width: 100%;
         }
+
+        .events-table {
+            min-width: 760px;
+        }
     }
 </style>
 {% endblock %}
-
 
 {% block content %}
 
@@ -248,7 +216,6 @@
 
     </div>
 
-
     <div class="events-card">
 
         <div class="table-responsive">
@@ -272,7 +239,6 @@
                         <tr>
 
                             <td class="ps-4">
-
                                 <div class="event-name">
                                     {{ event.title }}
                                 </div>
@@ -280,22 +246,17 @@
                                 <small class="event-category">
                                     {{ event.category.name }}
                                 </small>
-
                             </td>
-
 
                             <td>
                                 {{ event.start_at|date:"d M Y" }}
                             </td>
 
-
                             <td>
                                 {{ event.seat_limit }}
                             </td>
 
-
                             <td>
-
                                 {% if event.status == "published" %}
 
                                     <span class="status-badge status-published">
@@ -315,9 +276,7 @@
                                     </span>
 
                                 {% endif %}
-
                             </td>
-
 
                             <td class="text-end pe-4">
 
@@ -325,7 +284,7 @@
 
                                     <a
                                         href="{% url 'event_detail' event.slug %}"
-                                        class="btn btn-soft btn-sm"
+                                        class="btn btn-outline-light btn-sm"
                                     >
                                         View
                                     </a>
@@ -349,7 +308,6 @@
                             </td>
 
                         </tr>
-
 
                     {% empty %}
 

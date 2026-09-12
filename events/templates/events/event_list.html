@@ -1,565 +1,834 @@
-
 {% extends "accounts/base.html" %}
 {% load static %}
+
 {% block title %}Explore Events | EventHub{% endblock %}
 
 {% block extra_css %}
 <style>
-body{
-    background:
-        radial-gradient(circle at top left,rgba(255,107,53,.08),transparent 25%),
-        linear-gradient(180deg,#07101d 0%,#0a1424 45%,#0d1728 100%)!important;
-}
-main.container{background:transparent!important}
-
-.hero-section{
-    position:relative;
-    overflow:hidden;
-    border-radius:28px;
-    padding:70px 55px;
-    margin-bottom:32px;
-    background:
-        radial-gradient(circle at 85% 20%,rgba(255,107,53,.2),transparent 30%),
-        linear-gradient(135deg,#081226,#0b132b 55%,#172554);
-    color:#fff;
-    box-shadow:0 24px 55px rgba(0,0,0,.28);
-}
-
-.hero-label{
-    display:inline-flex;
-    background:rgba(255,255,255,.08);
-    border:1px solid rgba(255,255,255,.12);
-    color:#ffb089;
-    padding:8px 14px;
-    border-radius:999px;
-    font-size:.82rem;
-    font-weight:700;
-    margin-bottom:18px;
-}
-
-.hero-title{
-    font-size:clamp(2.5rem,5vw,4.4rem);
-    line-height:1.05;
-    font-weight:800;
-    letter-spacing:-2px;
-    margin-bottom:18px;
-}
-
-.hero-title span{color:#ff6b35}
-
-.hero-text{
-    max-width:620px;
-    color:#cbd5e1;
-    font-size:1.08rem;
-    line-height:1.75;
-    margin-bottom:28px;
-}
-
-.hero-actions{
-    display:flex;
-    flex-wrap:wrap;
-    gap:12px;
-}
-
-.hero-btn-outline{
-    border:1px solid rgba(255,255,255,.25);
-    color:#fff;
-    background:rgba(255,255,255,.04);
-}
-
-.hero-btn-outline:hover{
-    background:rgba(255,255,255,.1);
-    color:#fff;
-}
-
-/* ORBIT */
-
-.orbit-wrapper{
-    position:relative;
-    width:460px;
-    height:460px;
-    margin:auto;
-}
-
-.orbit-ring{
-    position:absolute;
-    inset:55px;
-    border:1px dashed rgba(255,255,255,.28);
-    border-radius:50%;
-    animation:spin 32s linear infinite;
-    transform-origin:center;
-}
-
-.orbit-ring::before{
-    content:"";
-    position:absolute;
-    inset:35px;
-    border:1px solid rgba(255,107,53,.12);
-    border-radius:50%;
-}
-
-.orbit-center{
-    position:absolute;
-    top:50%;
-    left:50%;
-    width:120px;
-    height:120px;
-    transform:translate(-50%,-50%);
-    border-radius:30px;
-    background:linear-gradient(135deg,#ff6b35,#f97316);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-size:3.5rem;
-    box-shadow:0 18px 48px rgba(255,107,53,.4);
-    z-index:3;
-}
-
-.orbit-item{
-    position:absolute;
-    width:76px;
-    height:76px;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    border-radius:20px;
-    background:rgba(255,255,255,.11);
-    border:1px solid rgba(255,255,255,.18);
-    backdrop-filter:blur(10px);
-    color:#fff;
-    font-size:.68rem;
-    font-weight:700;
-    box-shadow:0 10px 26px rgba(0,0,0,.22);
-    animation:counterSpin 32s linear infinite;
-}
-
-.orbit-item span{
-    font-size:1.5rem;
-    margin-bottom:3px;
-}
-
-.item-1{top:-25px;left:50%;transform:translateX(-50%)}
-.item-2{top:4%;right:11%}
-.item-3{top:28%;right:-25px}
-.item-4{bottom:28%;right:-25px}
-.item-5{bottom:4%;right:11%}
-.item-6{bottom:-25px;left:50%;transform:translateX(-50%)}
-.item-7{bottom:4%;left:11%}
-.item-8{bottom:28%;left:-25px}
-.item-9{top:28%;left:-25px}
-.item-10{top:4%;left:11%}
-
-@keyframes spin{
-    from{transform:rotate(0deg)}
-    to{transform:rotate(360deg)}
-}
-
-@keyframes counterSpin{
-    from{rotate:0deg}
-    to{rotate:-360deg}
-}
-
-/* SEARCH */
-
-.search-panel{
-    background:linear-gradient(180deg,#0f1b31,#0b1628);
-    border:1px solid #1f314d;
-    border-radius:22px;
-    padding:22px;
-    box-shadow:0 14px 35px rgba(0,0,0,.18);
-    margin-bottom:40px;
-}
-
-.search-title{
-    font-weight:700;
-    margin-bottom:14px;
-    color:#fff;
-}
-
-.search-panel .form-control,
-.search-panel .form-select{
-    background:#111f36;
-    border:1px solid #243956;
-    color:#fff;
-}
-
-.search-panel .form-control::placeholder{color:#94a3b8}
-
-.search-panel .form-control:focus,
-.search-panel .form-select:focus{
-    border-color:#ff6b35;
-    box-shadow:0 0 0 .2rem rgba(255,107,53,.14);
-    background:#12233d;
-    color:#fff;
-}
-
-/* EVENTS */
-
-.section-label{
-    color:#ff8d62;
-    font-weight:700;
-    text-transform:uppercase;
-    font-size:.78rem;
-    letter-spacing:1px;
-}
-
-.section-title{
-    font-weight:800;
-    color:#fff;
-}
-
-.count-text{color:#94a3b8}
-
-.event-card{
-    border:1px solid #1f314d;
-    border-radius:20px;
-    overflow:hidden;
-    background:linear-gradient(180deg,#101c32,#0c1729);
-    height:100%;
-    transition:.25s;
-}
-
-.event-card:hover{
-    transform:translateY(-7px);
-    border-color:rgba(255,107,53,.45);
-    box-shadow:0 20px 40px rgba(0,0,0,.26);
-}
-
-.event-image-wrapper{
-    height:210px;
-    overflow:hidden;
-    background:#0d1a2e;
-}
-
-.event-image{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-    transition:.35s;
-}
-
-.event-card:hover .event-image{transform:scale(1.05)}
-
-.event-placeholder{
-    height:100%;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    background:linear-gradient(135deg,#16243c,#0d1728);
-    font-size:3.2rem;
-}
-
-.event-category{
-    display:inline-flex;
-    padding:6px 10px;
-    border-radius:999px;
-    color:#ff946e;
-    background:rgba(255,107,53,.1);
-    border:1px solid rgba(255,107,53,.18);
-    font-size:.75rem;
-    font-weight:700;
-}
-
-.event-title{
-    font-weight:800;
-    color:#fff;
-    margin:12px 0;
-}
-
-.event-meta{
-    color:#94a3b8;
-    font-size:.88rem;
-    margin-bottom:7px;
-}
-
-.event-footer{
-    border-top:1px solid #1d2d47;
-    padding-top:16px;
-    margin-top:auto;
-}
-
-.event-price{
-    color:#fff;
-    font-weight:800;
-}
-
-.empty-state{
-    padding:70px 20px;
-    text-align:center;
-    background:linear-gradient(180deg,#101c32,#0c1729);
-    border:1px dashed #2a4061;
-    border-radius:20px;
-}
-
-.empty-state h4{color:#fff}
-.empty-state p{color:#94a3b8!important}
-
-/* RESPONSIVE */
-
-@media(max-width:1200px){
-    .orbit-wrapper{width:410px;height:410px}
-}
-
-@media(max-width:991px){
-    .hero-section{padding:50px 32px}
-    .orbit-wrapper{
-        width:390px;
-        height:390px;
-        margin-top:55px;
-    }
-}
-
-@media(max-width:576px){
-    .hero-section{
-        padding:40px 22px;
-        border-radius:20px;
+    .hero-section {
+        min-height: 490px;
+        margin-bottom: 26px;
+        padding: 55px 44px 32px;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, .07);
+        border-radius: 30px;
+        background-image:
+            linear-gradient(
+                90deg,
+                rgba(5, 9, 18, .94),
+                rgba(6, 11, 22, .71) 50%,
+                rgba(6, 11, 22, .22)
+            ),
+            var(--hero-image, none);
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        box-shadow: 0 25px 65px rgba(0, 0, 0, .3);
     }
 
-    .hero-title{font-size:2.45rem}
-
-    .orbit-wrapper{
-        width:300px;
-        height:300px;
+    .hero-label {
+        margin-bottom: 15px;
+        color: #c4b5fd;
+        font-size: .87rem;
+        font-weight: 600;
+        letter-spacing: 1.4px;
+        text-transform: uppercase;
     }
 
-    .orbit-ring{inset:38px}
-
-    .orbit-item{
-        width:54px;
-        height:54px;
-        font-size:.52rem;
-        border-radius:15px;
+    .hero-title {
+        max-width: 670px;
+        margin-bottom: 16px;
+        font-size: clamp(2.8rem, 5vw, 4.6rem);
+        font-weight: 800;
+        line-height: 1.03;
+        letter-spacing: -2px;
     }
 
-    .orbit-item span{font-size:1.05rem}
-
-    .orbit-center{
-        width:82px;
-        height:82px;
-        font-size:2.4rem;
-        border-radius:22px;
+    .hero-title span {
+        color: #fb4f8b;
     }
 
-    .search-panel{padding:16px}
-}
+    .hero-text {
+        max-width: 640px;
+        color: #d1d5db;
+        font-size: 1.07rem;
+        line-height: 1.7;
+    }
+
+    .search-box {
+        max-width: 900px;
+        margin-top: 24px;
+        padding: 10px;
+        border: 1px solid rgba(255, 255, 255, .11);
+        border-radius: 999px;
+        background: rgba(7, 13, 27, .83);
+        backdrop-filter: blur(15px);
+    }
+
+    .search-box .form-control,
+    .search-box .form-select {
+        min-height: 51px;
+        color: #fff;
+        background: transparent;
+        border: 0;
+        box-shadow: none !important;
+    }
+
+    .search-box .form-control::placeholder {
+        color: var(--muted);
+    }
+
+    .search-box .form-select option {
+        color: #fff;
+        background: #0b1120;
+    }
+
+    .search-button {
+        min-height: 51px;
+    }
+
+    .main-panel {
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, .06);
+        border-radius: 27px;
+        background: linear-gradient(
+            180deg,
+            rgba(10, 16, 30, .96),
+            rgba(8, 13, 24, .96)
+        );
+    }
+
+    .content-section {
+        padding: 31px;
+        border-top: 1px solid rgba(255, 255, 255, .05);
+    }
+
+    .content-section:first-child {
+        border-top: 0;
+    }
+
+    .section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-bottom: 24px;
+    }
+
+    .section-title {
+        margin: 0;
+        font-size: 1.75rem;
+        font-weight: 800;
+    }
+
+    .section-subtitle {
+        margin: 4px 0 0;
+        color: var(--muted);
+    }
+
+    .primary-types {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        overflow-x: auto;
+        padding-bottom: 7px;
+    }
+
+    .type-card {
+        min-width: 112px;
+        color: #e2e8f0;
+        text-align: center;
+    }
+
+    .type-icon {
+        width: 92px;
+        height: 92px;
+        margin: 0 auto 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid rgba(255, 255, 255, .1);
+        border-radius: 24px;
+        background: linear-gradient(145deg, #111b2e, #0b1323);
+        font-size: 2rem;
+        box-shadow: 0 12px 24px rgba(0, 0, 0, .22);
+        transition: .2s ease;
+    }
+
+    .type-card:hover .type-icon {
+        transform: translateY(-5px);
+        border-color: rgba(244, 63, 94, .35);
+    }
+
+    .type-name {
+        font-size: .87rem;
+        font-weight: 700;
+    }
+
+    .active-type .type-icon {
+        color: #fff !important;
+        background: linear-gradient(
+            135deg,
+            var(--primary),
+            var(--primary-light)
+        );
+        box-shadow: 0 16px 28px rgba(236, 72, 153, .25);
+    }
+
+    .tech { color: #38bdf8; }
+    .music { color: #c084fc; }
+    .sports { color: #facc15; }
+    .workshop { color: #4ade80; }
+    .comedy { color: #fbbf24; }
+    .business { color: #a78bfa; }
+    .food { color: #fb923c; }
+    .arts { color: #f472b6; }
+    .education { color: #22d3ee; }
+    .wellness { color: #fb7185; }
+    .community { color: #818cf8; }
+    .kids { color: #ec4899; }
+    .exhibition { color: #2dd4bf; }
+    .gaming { color: #8b5cf6; }
+    .photo { color: #60a5fa; }
+
+    .view-all-btn {
+        padding: 10px 18px;
+        white-space: nowrap;
+        color: #f472b6;
+        font-weight: 700;
+        background: transparent;
+        border: 1px solid rgba(244, 114, 182, .45);
+        border-radius: 999px;
+    }
+
+    .view-all-btn:hover {
+        color: #fff;
+        background: rgba(236, 72, 153, .12);
+    }
+
+    .extra-types {
+        display: none;
+        grid-template-columns: repeat(5, minmax(110px, 1fr));
+        gap: 22px;
+        margin-top: 28px;
+        padding-top: 25px;
+        border-top: 1px solid rgba(255, 255, 255, .06);
+    }
+
+    .extra-types.show {
+        display: grid;
+    }
+
+    .event-count {
+        color: var(--muted);
+        font-size: .91rem;
+    }
+
+    .events-grid {
+        row-gap: 28px;
+    }
+
+    .event-card {
+        height: 100%;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, .07);
+        border-radius: 23px;
+        background: linear-gradient(
+            180deg,
+            rgba(13, 20, 36, .98),
+            rgba(8, 13, 25, .98)
+        );
+        box-shadow: 0 16px 38px rgba(0, 0, 0, .2);
+        transition: transform .2s ease, box-shadow .2s ease;
+    }
+
+    .event-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 25px 45px rgba(0, 0, 0, .28);
+    }
+
+    .event-image-wrapper {
+        position: relative;
+        height: 255px;
+        overflow: hidden;
+    }
+
+    .event-image-wrapper::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+            180deg,
+            transparent 45%,
+            rgba(5, 8, 17, .52)
+        );
+    }
+
+    .event-image {
+        width: 100%;
+        height: 100%;
+        display: block;
+        object-fit: cover;
+    }
+
+    .event-placeholder {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #64748b;
+        font-size: 3rem;
+        background: #111827;
+    }
+
+    .event-category {
+        position: absolute;
+        z-index: 3;
+        top: 15px;
+        left: 15px;
+        padding: 7px 13px;
+        color: #ffd0e2;
+        font-size: .78rem;
+        font-weight: 700;
+        background: rgba(244, 63, 94, .2);
+        border: 1px solid rgba(244, 63, 94, .3);
+        border-radius: 999px;
+    }
+
+    .event-body {
+        padding: 22px;
+    }
+
+    .event-meta {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 13px;
+        color: #cbd5e1;
+        font-size: .87rem;
+    }
+
+    .event-meta span {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .event-meta i {
+        color: var(--primary);
+    }
+
+    .event-title {
+        margin-bottom: 9px;
+        font-size: 1.38rem;
+        font-weight: 800;
+    }
+
+    .event-description {
+        min-height: 70px;
+        margin-bottom: 18px;
+        color: var(--muted);
+        font-size: .92rem;
+        line-height: 1.65;
+    }
+
+    .event-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+    }
+
+    .free-text {
+        color: #4ade80;
+        font-weight: 800;
+    }
+
+    @media (max-width: 991px) {
+        .hero-section {
+            min-height: auto;
+            padding: 36px 22px 29px;
+        }
+
+        .search-box {
+            border-radius: 23px;
+        }
+
+        .extra-types {
+            grid-template-columns: repeat(4, 1fr);
+        }
+    }
+
+    @media (max-width: 768px) {
+        .content-section {
+            padding: 25px 18px;
+        }
+
+        .search-box {
+            padding: 13px;
+        }
+
+        .type-card {
+            min-width: 92px;
+        }
+
+        .type-icon {
+            width: 78px;
+            height: 78px;
+            border-radius: 20px;
+            font-size: 1.65rem;
+        }
+
+        .extra-types {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .event-image-wrapper {
+            height: 225px;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .extra-types {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
 </style>
 {% endblock %}
 
 {% block content %}
-<section>
 
-<div class="hero-section">
-    <div class="row align-items-center">
-
-        <div class="col-lg-7">
-            <div class="hero-label">✦ CURATED EVENTS • REAL EXPERIENCES</div>
-
-            <h1 class="hero-title">
-                More than events.
-                <span>Experiences that stay with you.</span>
-            </h1>
-
-            <p class="hero-text">
-                Explore a curated world of concerts, workshops, sports, festivals,
-                and community experiences — bringing the best of Maharashtra closer to you.
-            </p>
-
-            <div class="hero-actions">
-                <a href="#events" class="btn btn-primary px-4 py-2">
-                    Explore Events
-                </a>
-
-                {% if not user.is_authenticated %}
-                    <a href="{% url 'signup' %}" class="btn hero-btn-outline px-4 py-2">
-                        Create Account
-                    </a>
-
-                {% elif user.role == "organizer" or user.is_superuser %}
-                    <a href="{% url 'event_create' %}" class="btn hero-btn-outline px-4 py-2">
-                        + Create Event
-                    </a>
-                {% endif %}
-            </div>
-        </div>
-
-        <div class="col-lg-5">
-            <div class="orbit-wrapper">
-
-                <div class="orbit-ring">
-                    <div class="orbit-item item-1"><span>💻</span>Tech</div>
-                    <div class="orbit-item item-2"><span>🎓</span>Workshop</div>
-                    <div class="orbit-item item-3"><span>🎵</span>Music</div>
-                    <div class="orbit-item item-4"><span>⚽</span>Sports</div>
-                    <div class="orbit-item item-5"><span>🍴</span>Food</div>
-                    <div class="orbit-item item-6"><span>🎭</span>Culture</div>
-                    <div class="orbit-item item-7"><span>🎨</span>Design</div>
-                    <div class="orbit-item item-8"><span>🎤</span>Meetup</div>
-                    <div class="orbit-item item-9"><span>💼</span>Business</div>
-                    <div class="orbit-item item-10"><span>📷</span>Photo</div>
-                </div>
-
-                <div class="orbit-center">🎟️</div>
-
-            </div>
-        </div>
-
+<section
+    class="hero-section"
+    {% if hero_event %}
+        {% if hero_event.demo_banner_path %}
+            style="--hero-image: url('{% static hero_event.demo_banner_path %}');"
+        {% elif hero_event.banner %}
+            style="--hero-image: url('{{ hero_event.banner.url }}');"
+        {% endif %}
+    {% endif %}
+>
+    <div class="hero-label">
+        Live experiences. Lasting memories.
     </div>
-</div>
 
-<div class="search-panel">
-    <div class="search-title">🔎 Find your next event</div>
+    <h1 class="hero-title">
+        Discover Amazing <span>Events Near You</span>
+    </h1>
 
-    <form method="get" class="row g-3">
+    <p class="hero-text">
+        From tech talks to music concerts, workshops to sports —
+        find experiences that inspire, connect and create memories.
+    </p>
 
-        <div class="col-md-7">
-            <input
-                type="search"
-                name="q"
-                class="form-control"
-                placeholder="Search by event name or city..."
-                value="{{ query }}"
+    <div class="search-box">
+        <form method="get" class="row g-2 align-items-center">
+
+            <div class="col-lg-5">
+                <input
+                    type="search"
+                    name="q"
+                    value="{{ query }}"
+                    class="form-control"
+                    placeholder="Search events, categories or venues..."
+                >
+            </div>
+
+            <div class="col-lg-3">
+                <select name="category" class="form-select">
+                    <option value="">All Categories</option>
+
+                    {% for category in categories %}
+                        <option
+                            value="{{ category.slug }}"
+                            {% if selected_category == category.slug %}selected{% endif %}
+                        >
+                            {{ category.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col-lg-2">
+                <select name="city" class="form-select">
+                    <option value="">All Cities</option>
+
+                    {% for city in cities %}
+                        <option
+                            value="{{ city }}"
+                            {% if selected_city == city %}selected{% endif %}
+                        >
+                            {{ city }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col-lg-2">
+                <button
+                    type="submit"
+                    class="btn btn-primary rounded-pill w-100 search-button"
+                >
+                    Search
+                </button>
+            </div>
+
+        </form>
+    </div>
+</section>
+
+<div class="main-panel">
+
+    <section class="content-section">
+        <div class="section-header">
+            <div>
+                <h2 class="section-title">Explore Event Types</h2>
+                <p class="section-subtitle">
+                    Find experiences by category
+                </p>
+            </div>
+
+            <button
+                type="button"
+                class="view-all-btn"
+                id="viewAllTypesBtn"
+                aria-controls="extraEventTypes"
+                aria-expanded="false"
             >
-        </div>
-
-        <div class="col-md-3">
-            <select name="category" class="form-select">
-
-                <option value="">All Categories</option>
-
-                {% for category in categories %}
-                    <option
-                        value="{{ category.slug }}"
-                        {% if selected_category == category.slug %}selected{% endif %}
-                    >
-                        {{ category.name }}
-                    </option>
-                {% endfor %}
-
-            </select>
-        </div>
-
-        <div class="col-md-2">
-            <button class="btn btn-primary w-100 h-100">
-                Search
+                View All
+                <i class="bi bi-arrow-right"></i>
             </button>
         </div>
 
-    </form>
-</div>
+        <div class="primary-types">
 
-<div id="events">
+            <a
+                href="{% url 'event_list' %}"
+                class="type-card{% if not selected_category and not query and not selected_city %} active-type{% endif %}"
+            >
+                <div class="type-icon">
+                    <i class="bi bi-grid-fill"></i>
+                </div>
+                <div class="type-name">All Events</div>
+            </a>
 
-    <div class="d-flex justify-content-between align-items-end flex-wrap gap-3 mb-4">
+            <a
+                href="?category=technology"
+                class="type-card{% if selected_category == 'technology' %} active-type{% endif %}"
+            >
+                <div class="type-icon tech">
+                    <i class="bi bi-cpu"></i>
+                </div>
+                <div class="type-name">Technology</div>
+            </a>
 
-        <div>
-            <div class="section-label">Upcoming Events</div>
+            <a
+                href="?category=music"
+                class="type-card{% if selected_category == 'music' %} active-type{% endif %}"
+            >
+                <div class="type-icon music">
+                    <i class="bi bi-music-note-beamed"></i>
+                </div>
+                <div class="type-name">Music</div>
+            </a>
 
-            <h2 class="section-title mb-0">
-                Explore what's happening
-            </h2>
+            <a
+                href="?category=sports"
+                class="type-card{% if selected_category == 'sports' %} active-type{% endif %}"
+            >
+                <div class="type-icon sports">
+                    <i class="bi bi-trophy"></i>
+                </div>
+                <div class="type-name">Sports</div>
+            </a>
+
+            <a
+                href="?category=workshop"
+                class="type-card{% if selected_category == 'workshop' %} active-type{% endif %}"
+            >
+                <div class="type-icon workshop">
+                    <i class="bi bi-people"></i>
+                </div>
+                <div class="type-name">Workshop</div>
+            </a>
+
+            <a
+                href="?category=comedy"
+                class="type-card{% if selected_category == 'comedy' %} active-type{% endif %}"
+            >
+                <div class="type-icon comedy">
+                    <i class="bi bi-emoji-laughing"></i>
+                </div>
+                <div class="type-name">Comedy</div>
+            </a>
+
         </div>
 
-        {% if events %}
-            <div class="count-text small">
+        <div
+            class="extra-types{% if selected_category and selected_category != 'technology' and selected_category != 'music' and selected_category != 'sports' and selected_category != 'workshop' and selected_category != 'comedy' %} show{% endif %}"
+            id="extraEventTypes"
+        >
+
+            <a
+                href="?category=business"
+                class="type-card{% if selected_category == 'business' %} active-type{% endif %}"
+            >
+                <div class="type-icon business">
+                    <i class="bi bi-briefcase"></i>
+                </div>
+                <div class="type-name">Business</div>
+            </a>
+
+            <a
+                href="?category=food-entertainment"
+                class="type-card{% if selected_category == 'food-entertainment' %} active-type{% endif %}"
+            >
+                <div class="type-icon food">
+                    <i class="bi bi-cup-hot"></i>
+                </div>
+                <div class="type-name">Food</div>
+            </a>
+
+            <a
+                href="?category=arts-culture"
+                class="type-card{% if selected_category == 'arts-culture' %} active-type{% endif %}"
+            >
+                <div class="type-icon arts">
+                    <i class="bi bi-palette"></i>
+                </div>
+                <div class="type-name">Arts & Culture</div>
+            </a>
+
+            <a
+                href="?category=education"
+                class="type-card{% if selected_category == 'education' %} active-type{% endif %}"
+            >
+                <div class="type-icon education">
+                    <i class="bi bi-mortarboard"></i>
+                </div>
+                <div class="type-name">Education</div>
+            </a>
+
+            <a
+                href="?category=health-wellness"
+                class="type-card{% if selected_category == 'health-wellness' %} active-type{% endif %}"
+            >
+                <div class="type-icon wellness">
+                    <i class="bi bi-heart-pulse"></i>
+                </div>
+                <div class="type-name">Wellness</div>
+            </a>
+
+            <a
+                href="?category=community"
+                class="type-card{% if selected_category == 'community' %} active-type{% endif %}"
+            >
+                <div class="type-icon community">
+                    <i class="bi bi-people-fill"></i>
+                </div>
+                <div class="type-name">Community</div>
+            </a>
+
+            <a
+                href="?category=kids-family"
+                class="type-card{% if selected_category == 'kids-family' %} active-type{% endif %}"
+            >
+                <div class="type-icon kids">
+                    <i class="bi bi-balloon"></i>
+                </div>
+                <div class="type-name">Kids & Family</div>
+            </a>
+
+            <a
+                href="?category=exhibition"
+                class="type-card{% if selected_category == 'exhibition' %} active-type{% endif %}"
+            >
+                <div class="type-icon exhibition">
+                    <i class="bi bi-easel2"></i>
+                </div>
+                <div class="type-name">Exhibition</div>
+            </a>
+
+            <a
+                href="?category=gaming"
+                class="type-card{% if selected_category == 'gaming' %} active-type{% endif %}"
+            >
+                <div class="type-icon gaming">
+                    <i class="bi bi-controller"></i>
+                </div>
+                <div class="type-name">Gaming</div>
+            </a>
+
+            <a
+                href="?category=photography"
+                class="type-card{% if selected_category == 'photography' %} active-type{% endif %}"
+            >
+                <div class="type-icon photo">
+                    <i class="bi bi-camera"></i>
+                </div>
+                <div class="type-name">Photography</div>
+            </a>
+
+        </div>
+    </section>
+
+    <section class="content-section">
+        <div class="section-header">
+            <div>
+                <h2 class="section-title">
+                    {% if selected_category_name %}
+                        {{ selected_category_name }} Events
+                    {% elif query %}
+                        Search Results
+                    {% elif selected_city %}
+                        Events in {{ selected_city }}
+                    {% else %}
+                        All Events
+                    {% endif %}
+                </h2>
+
+                <p class="section-subtitle">
+                    {% if selected_category_name %}
+                        Explore upcoming {{ selected_category_name }} experiences
+                    {% elif query %}
+                        Results for "{{ query }}"
+                    {% elif selected_city %}
+                        Discover upcoming events in {{ selected_city }}
+                    {% else %}
+                        Discover upcoming experiences across Maharashtra
+                    {% endif %}
+                </p>
+            </div>
+
+            <div class="event-count">
                 {{ events|length }}
                 event{{ events|length|pluralize }}
-                available
             </div>
-        {% endif %}
+        </div>
 
-    </div>
+        <div class="row events-grid">
 
-    <div class="row g-4">
+            {% for event in events %}
+                <div class="col-md-6 col-xl-4">
+                    <article class="event-card">
 
-        {% for event in events %}
+                        <div class="event-image-wrapper">
+                            <span class="event-category">
+                                {{ event.category.name }}
+                            </span>
 
-            <div class="col-md-6 col-lg-4">
-
-                <div class="event-card d-flex flex-column">
-
-                    <div class="event-image-wrapper">
-
-                        {% if event.demo_banner_path %}
-                    <img
-                         src="{% static event.demo_banner_path %}"
-                         class="event-image"
-                         alt="{{ event.title }}"
-                    >
-                    {% else %}
-                        <div class="event-placeholder">🎟️</div>
-                    {% endif %}
-
-                    </div>
-
-                    <div class="card-body d-flex flex-column p-4">
-
-                        <span class="event-category">
-                            {{ event.category.name }}
-                        </span>
-
-                        <h5 class="event-title">
-                            {{ event.title }}
-                        </h5>
-
-                        <div class="event-meta">
-                            📅 {{ event.start_at|date:"d M Y, h:i A" }}
+                            {% if event.demo_banner_path %}
+                                <img
+                                    src="{% static event.demo_banner_path %}"
+                                    alt="{{ event.title }}"
+                                    class="event-image"
+                                    loading="lazy"
+                                    decoding="async"
+                                >
+                            {% elif event.banner %}
+                                <img
+                                    src="{{ event.banner.url }}"
+                                    alt="{{ event.title }}"
+                                    class="event-image"
+                                    loading="lazy"
+                                    decoding="async"
+                                >
+                            {% else %}
+                                <div class="event-placeholder">
+                                    <i class="bi bi-calendar-event"></i>
+                                </div>
+                            {% endif %}
                         </div>
 
-                        <div class="event-meta">
-                            📍 {{ event.city }} · {{ event.venue }}
-                        </div>
+                        <div class="event-body">
+                            <div class="event-meta">
+                                <span>
+                                    <i class="bi bi-calendar-event"></i>
+                                    {{ event.start_at|date:"d M Y" }}
+                                </span>
 
-                        <div class="event-footer d-flex justify-content-between align-items-center gap-3">
-
-                            <div class="event-price">
-                                {% if event.is_free %}
-                                    <span class="text-success">Free</span>
-                                {% else %}
-                                    ₹{{ event.price }}
-                                {% endif %}
+                                <span>
+                                    <i class="bi bi-geo-alt"></i>
+                                    {{ event.city }}
+                                </span>
                             </div>
 
-                            <a
-                                href="{% url 'event_detail' event.slug %}"
-                                class="btn btn-primary btn-sm px-3"
-                            >
-                                View Details
-                            </a>
+                            <h3 class="event-title">
+                                {{ event.title }}
+                            </h3>
 
+                            <div class="event-description">
+                                {{ event.description|truncatewords:18 }}
+                            </div>
+
+                            <div class="event-footer">
+                                <div>
+                                    {% if event.is_free %}
+                                        <span class="free-text">Free</span>
+                                    {% else %}
+                                        ₹{{ event.price }}
+                                    {% endif %}
+                                </div>
+
+                                <a
+                                    href="{% url 'event_detail' event.slug %}"
+                                    class="btn btn-primary btn-sm px-3"
+                                >
+                                    View Details
+                                </a>
+                            </div>
                         </div>
 
+                    </article>
+                </div>
+
+            {% empty %}
+                <div class="col-12">
+                    <div class="text-center py-5">
+                        <i class="bi bi-calendar-x fs-1 text-secondary"></i>
+                        <h4 class="mt-3">No events found</h4>
+
+                        <a
+                            href="{% url 'event_list' %}"
+                            class="btn btn-primary mt-2"
+                        >
+                            Show All Events
+                        </a>
                     </div>
-
                 </div>
+            {% endfor %}
 
-            </div>
-
-        {% empty %}
-
-            <div class="col-12">
-
-                <div class="empty-state">
-
-                    <div class="fs-1 mb-3">📅</div>
-
-                    <h4 class="fw-bold">
-                        No events found
-                    </h4>
-
-                    <p class="mb-0">
-                        Try another search or check back later.
-                    </p>
-
-                </div>
-
-            </div>
-
-        {% endfor %}
-
-    </div>
+        </div>
+    </section>
 
 </div>
 
-</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const viewAllButton = document.getElementById("viewAllTypesBtn");
+    const extraTypes = document.getElementById("extraEventTypes");
+
+    if (viewAllButton && extraTypes) {
+        const updateButton = () => {
+            const open = extraTypes.classList.contains("show");
+
+            viewAllButton.innerHTML = open
+                ? 'Show Less <i class="bi bi-arrow-up"></i>'
+                : 'View All <i class="bi bi-arrow-right"></i>';
+
+            viewAllButton.setAttribute("aria-expanded", open);
+        };
+
+        updateButton();
+
+        viewAllButton.addEventListener("click", () => {
+            extraTypes.classList.toggle("show");
+            updateButton();
+        });
+    }
+</script>
 {% endblock %}

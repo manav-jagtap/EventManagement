@@ -1,21 +1,26 @@
-import base64
+from functools import wraps
 from io import BytesIO
+from uuid import UUID
+import base64
 
 import qrcode
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied, ValidationError
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.http import require_POST
 
 from accounts.models import User
 from events.models import Event
+
 from .models import Registration
 from .services import book_event, cancel_registration
 
 
 def attendee_required(view_func):
+    @wraps(view_func)
     @login_required
     def wrapper(request, *args, **kwargs):
         if (
@@ -23,12 +28,14 @@ def attendee_required(view_func):
             or request.user.role != User.Role.ATTENDEE
         ):
             raise PermissionDenied
+
         return view_func(request, *args, **kwargs)
 
     return wrapper
 
 
 def organizer_required(view_func):
+    @wraps(view_func)
     @login_required
     def wrapper(request, *args, **kwargs):
         if not (
@@ -36,45 +43,73 @@ def organizer_required(view_func):
             or request.user.role == User.Role.ORGANIZER
         ):
             raise PermissionDenied
+
         return view_func(request, *args, **kwargs)
 
     return wrapper
 
 
+def get_verify_ticket_url(ticket_code):
+    verify_url = reverse("verify_ticket")
+    return f"{verify_url}?ticket={ticket_code}"
+
+
 @attendee_required
 @require_POST
 def register_event(request, event_id):
-    event = get_object_or_404(Event, pk=event_id)
+    event = get_object_or_404(
+        Event,
+        pk=event_id,
+    )
 
     try:
-        registration = book_event(request.user, event.pk)
+        registration = book_event(
+            request.user,
+            event.pk,
+        )
 
         if registration.status == Registration.Status.CONFIRMED:
-            messages.success(request, "Your seat is confirmed!")
+            messages.success(
+                request,
+                "Your seat is confirmed!",
+            )
         else:
             messages.info(
                 request,
-                "Event is full. You have joined the waitlist."
+                "Event is full. You have joined the waitlist.",
             )
 
     except ValidationError as exc:
-        messages.error(request, "; ".join(exc.messages))
+        messages.error(
+            request,
+            "; ".join(exc.messages),
+        )
 
-    return redirect("event_detail", slug=event.slug)
+    return redirect(
+        "event_detail",
+        slug=event.slug,
+    )
 
 
 @attendee_required
 def my_bookings(request):
     registrations = (
-        Registration.objects.filter(user=request.user)
-        .select_related("event", "event__category")
+        Registration.objects.filter(
+            user=request.user,
+        )
+        .select_related(
+            "event",
+            "event__category",
+        )
         .order_by("-created_at")
     )
 
     return render(
         request,
         "registrations/my_bookings.html",
-        {"registrations": registrations},
+        {
+            "registrations": registrations,
+        },
     )
 
 
@@ -97,7 +132,9 @@ def ticket_detail(request, ticket_code):
         border=3,
     )
 
-    qr.add_data(str(registration.ticket_code))
+    qr.add_data(
+        str(registration.ticket_code)
+    )
     qr.make(fit=True)
 
     image = qr.make_image(
@@ -106,7 +143,10 @@ def ticket_detail(request, ticket_code):
     )
 
     buffer = BytesIO()
-    image.save(buffer, format="PNG")
+    image.save(
+        buffer,
+        format="PNG",
+    )
 
     qr_image = base64.b64encode(
         buffer.getvalue()
@@ -132,14 +172,21 @@ def cancel_booking(request, registration_id):
     )
 
     try:
-        cancel_registration(request.user, registration.pk)
+        cancel_registration(
+            request.user,
+            registration.pk,
+        )
+
         messages.success(
             request,
-            "Your registration has been cancelled."
+            "Your registration has been cancelled.",
         )
 
     except ValidationError as exc:
-        messages.error(request, "; ".join(exc.messages))
+        messages.error(
+            request,
+            "; ".join(exc.messages),
+        )
 
     return redirect("my_bookings")
 
@@ -147,20 +194,38 @@ def cancel_booking(request, registration_id):
 @organizer_required
 def verify_ticket(request):
     registration = None
-    ticket_code = request.GET.get("ticket", "").strip()
+    ticket_code = request.GET.get(
+        "ticket",
+        "",
+    ).strip()
 
     if ticket_code:
-        registration = (
-            Registration.objects
-            .select_related("user", "event")
-            .filter(ticket_code=ticket_code)
-            .first()
-        )
+        try:
+            ticket_uuid = UUID(ticket_code)
 
-        if registration:
-            if (
+        except ValueError:
+            messages.error(
+                request,
+                "Invalid ticket ID.",
+            )
+
+        else:
+            registration = (
+                Registration.objects
+                .select_related(
+                    "user",
+                    "event",
+                )
+                .filter(
+                    ticket_code=ticket_uuid,
+                )
+                .first()
+            )
+
+            if registration and (
                 not request.user.is_superuser
-                and registration.event.organizer_id != request.user.pk
+                and registration.event.organizer_id
+                != request.user.pk
             ):
                 raise PermissionDenied
 
@@ -178,42 +243,48 @@ def verify_ticket(request):
 @require_POST
 def check_in_ticket(request, registration_id):
     registration = get_object_or_404(
-        Registration.objects.select_related("event"),
+        Registration.objects.select_related(
+            "event",
+        ),
         pk=registration_id,
     )
 
     if (
         not request.user.is_superuser
-        and registration.event.organizer_id != request.user.pk
+        and registration.event.organizer_id
+        != request.user.pk
     ):
         raise PermissionDenied
+
+    verify_url = get_verify_ticket_url(
+        registration.ticket_code
+    )
 
     if registration.status != Registration.Status.CONFIRMED:
         messages.error(
             request,
-            "Only confirmed registrations can be checked in."
+            "Only confirmed registrations can be checked in.",
         )
-        return redirect(
-            f"/bookings/verify/?ticket={registration.ticket_code}"
-        )
+
+        return redirect(verify_url)
 
     if registration.checked_in_at:
         messages.info(
             request,
-            "This ticket has already been checked in."
-        )
-        return redirect(
-            f"/bookings/verify/?ticket={registration.ticket_code}"
+            "This ticket has already been checked in.",
         )
 
+        return redirect(verify_url)
+
     registration.checked_in_at = timezone.now()
-    registration.save(update_fields=["checked_in_at"])
+
+    registration.save(
+        update_fields=["checked_in_at"],
+    )
 
     messages.success(
         request,
-        "Attendee checked in successfully."
+        "Attendee checked in successfully.",
     )
 
-    return redirect(
-        f"/bookings/verify/?ticket={registration.ticket_code}"
-    )
+    return redirect(verify_url)

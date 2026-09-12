@@ -5,18 +5,7 @@
 {% block extra_css %}
 <style>
     body {
-        background:
-            radial-gradient(
-                circle at top left,
-                rgba(255, 107, 53, 0.08),
-                transparent 25%
-            ),
-            linear-gradient(
-                180deg,
-                #07101d 0%,
-                #0a1424 45%,
-                #0d1728 100%
-            ) !important;
+        background: #0a0a0d !important;
     }
 
     main.container {
@@ -24,186 +13,157 @@
     }
 
     .dashboard-shell {
-        padding: 35px 0 55px;
+        padding: 28px 0 55px;
     }
 
     .dashboard-hero {
         position: relative;
         overflow: hidden;
-
         padding: 42px 38px;
         margin-bottom: 30px;
-
         border-radius: 24px;
-
         background:
             radial-gradient(
-                circle at 90% 20%,
-                rgba(255, 107, 53, 0.18),
-                transparent 28%
+                circle at 85% 10%,
+                rgba(244, 63, 94, 0.15),
+                transparent 30%
             ),
-            linear-gradient(
-                135deg,
-                #0b132b,
-                #101c35 55%,
-                #172554
-            );
-
-        border: 1px solid rgba(255, 255, 255, 0.07);
-
-        box-shadow:
-            0 22px 50px rgba(0, 0, 0, 0.22);
+            #121217;
+        border: 1px solid #2a2a32;
     }
 
     .dashboard-label {
         display: inline-flex;
         align-items: center;
-        gap: 7px;
-
+        gap: 6px;
         padding: 7px 12px;
         margin-bottom: 14px;
-
         border-radius: 999px;
-
-        background: rgba(255, 107, 53, 0.10);
-        border: 1px solid rgba(255, 107, 53, 0.20);
-
-        color: #ff9a73;
-
-        font-size: 0.77rem;
-        font-weight: 700;
-        letter-spacing: 0.8px;
+        background: rgba(244, 63, 94, 0.10);
+        border: 1px solid rgba(244, 63, 94, 0.20);
+        color: #fb7185;
+        font-size: .76rem;
+        font-weight: 800;
+        letter-spacing: .8px;
         text-transform: uppercase;
     }
 
     .dashboard-title {
-        color: #ffffff;
+        margin-bottom: 10px;
+        color: #fff;
+        font-size: clamp(2rem, 4vw, 3rem);
         font-weight: 800;
         letter-spacing: -1px;
-        margin-bottom: 10px;
     }
 
     .dashboard-subtitle {
-        color: #94a3b8;
         max-width: 700px;
         margin-bottom: 0;
+        color: #92929d;
+        line-height: 1.7;
     }
 
     .dashboard-grid {
-        margin-top: 8px;
+        margin-top: 5px;
     }
 
     .dashboard-panel {
         height: 100%;
-
-        background: linear-gradient(
-            180deg,
-            #101c32,
-            #0c1729
-        );
-
-        border: 1px solid #1f314d;
-        border-radius: 22px;
-
-        padding: 28px;
-
-        transition:
-            transform 0.25s ease,
-            box-shadow 0.25s ease,
-            border-color 0.25s ease;
+        padding: 26px;
+        background: #121217;
+        border: 1px solid #2a2a32;
+        border-radius: 20px;
+        transition: .22s ease;
     }
 
     .dashboard-panel:hover {
-        transform: translateY(-5px);
-
-        border-color: rgba(255, 107, 53, 0.40);
-
-        box-shadow:
-            0 18px 38px rgba(0, 0, 0, 0.24);
+        transform: translateY(-4px);
+        border-color: rgba(244, 63, 94, .35);
+        box-shadow: 0 18px 38px rgba(0, 0, 0, .28);
     }
 
     .dashboard-icon {
-        width: 58px;
-        height: 58px;
-
+        width: 54px;
+        height: 54px;
         display: flex;
         align-items: center;
         justify-content: center;
-
         margin-bottom: 18px;
-
-        border-radius: 16px;
-
-        background: rgba(255, 107, 53, 0.12);
-        border: 1px solid rgba(255, 107, 53, 0.18);
-
-        font-size: 1.8rem;
+        border-radius: 14px;
+        background: linear-gradient(
+            135deg,
+            rgba(244, 63, 94, .16),
+            rgba(236, 72, 153, .08)
+        );
+        border: 1px solid rgba(244, 63, 94, .18);
+        font-size: 1.6rem;
     }
 
     .dashboard-panel h5 {
-        color: #ffffff;
+        margin-bottom: 9px;
+        color: #fff;
         font-weight: 800;
-        margin-bottom: 10px;
     }
 
     .dashboard-panel p {
-        color: #94a3b8;
-        line-height: 1.6;
+        margin-bottom: 0;
+        color: #92929d;
+        line-height: 1.65;
     }
 
     .dashboard-actions {
         display: flex;
         flex-wrap: wrap;
         gap: 10px;
-        margin-top: 18px;
+        margin-top: 20px;
     }
 
     .btn-dashboard-outline {
-        border: 1px solid #344766;
-        color: #dbeafe;
+        border: 1px solid #3a3a43;
+        color: #d4d4d8;
         background: transparent;
     }
 
     .btn-dashboard-outline:hover {
-        color: #ffffff;
-        background: #17233a;
-        border-color: #526987;
+        color: #fff;
+        background: #1a1a21;
+        border-color: #52525b;
     }
 
     .btn-dashboard-success {
-        border: 1px solid rgba(34, 197, 94, 0.45);
-        color: #4ade80;
-        background: rgba(34, 197, 94, 0.08);
+        border: 1px solid rgba(34, 197, 94, .35);
+        color: #86efac;
+        background: rgba(34, 197, 94, .08);
     }
 
     .btn-dashboard-success:hover {
-        color: #ffffff;
+        color: #fff;
         background: #16a34a;
         border-color: #16a34a;
     }
 
     .dashboard-footer-note {
-        color: #64748b;
-        font-size: 0.85rem;
-        margin-top: 24px;
+        margin-top: 26px;
+        color: #62626d;
+        font-size: .84rem;
+        text-align: center;
     }
 
     @media (max-width: 768px) {
+        .dashboard-shell {
+            padding-top: 14px;
+        }
+
         .dashboard-hero {
             padding: 32px 24px;
         }
 
-        .dashboard-title {
-            font-size: 2rem;
-        }
-
         .dashboard-panel {
-            padding: 24px;
+            padding: 22px;
         }
     }
 </style>
 {% endblock %}
-
 
 {% block content %}
 
@@ -219,34 +179,30 @@
             Welcome, {{ user.first_name|default:user.username }} 👋
         </h1>
 
-
         {% if user.is_superuser or user.role == "admin" %}
 
             <p class="dashboard-subtitle">
-                Manage your platform, users and event operations
+                Manage users, events and platform operations
                 from one central workspace.
             </p>
-
 
         {% elif user.role == "organizer" %}
 
             <p class="dashboard-subtitle">
-                Create events, monitor registrations,
-                verify tickets and track attendee performance.
+                Create events, manage registrations,
+                verify tickets and track event performance.
             </p>
-
 
         {% else %}
 
             <p class="dashboard-subtitle">
                 Discover events, manage your bookings
-                and access your confirmed digital tickets.
+                and access your digital tickets.
             </p>
 
         {% endif %}
 
     </section>
-
 
     {% if user.is_superuser or user.role == "admin" %}
 
@@ -286,11 +242,9 @@
 
         </div>
 
-
     {% elif user.role == "organizer" %}
 
         <div class="row g-4 dashboard-grid">
-
 
             <div class="col-lg-6">
 
@@ -305,8 +259,8 @@
                     </h5>
 
                     <p>
-                        Create new events and manage your
-                        existing event information.
+                        Create new events and manage
+                        your existing event information.
                     </p>
 
                     <div class="dashboard-actions">
@@ -331,7 +285,6 @@
 
             </div>
 
-
             <div class="col-lg-6">
 
                 <div class="dashboard-panel">
@@ -345,8 +298,8 @@
                     </h5>
 
                     <p>
-                        Verify attendee ticket IDs
-                        and securely check attendees into events.
+                        Verify attendee ticket IDs and securely
+                        check attendees into your events.
                     </p>
 
                     <div class="dashboard-actions">
@@ -364,7 +317,6 @@
 
             </div>
 
-
             <div class="col-lg-6">
 
                 <div class="dashboard-panel">
@@ -378,8 +330,8 @@
                     </h5>
 
                     <p>
-                        Track registrations, confirmed bookings,
-                        waitlists, check-ins and attendance rates.
+                        Track registrations, waitlists,
+                        check-ins and attendance performance.
                     </p>
 
                     <div class="dashboard-actions">
@@ -397,7 +349,6 @@
 
             </div>
 
-
             <div class="col-lg-6">
 
                 <div class="dashboard-panel">
@@ -411,7 +362,7 @@
                     </h5>
 
                     <p>
-                        View your published events exactly
+                        View published events exactly
                         as attendees see them.
                     </p>
 
@@ -432,11 +383,9 @@
 
         </div>
 
-
     {% else %}
 
         <div class="row g-4 dashboard-grid">
-
 
             <div class="col-md-6">
 
@@ -452,7 +401,7 @@
 
                     <p>
                         Discover upcoming workshops,
-                        conferences, meetups and other events.
+                        concerts, sports and community events.
                     </p>
 
                     <div class="dashboard-actions">
@@ -469,7 +418,6 @@
                 </div>
 
             </div>
-
 
             <div class="col-md-6">
 
@@ -506,7 +454,6 @@
         </div>
 
     {% endif %}
-
 
     <div class="dashboard-footer-note">
         EventHub • Discover • Book • Experience
