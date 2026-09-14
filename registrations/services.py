@@ -1,5 +1,5 @@
 from django.core.exceptions import ValidationError
-from django.db import connection, transaction
+from django.db import transaction
 from django.utils import timezone
 
 from accounts.models import User
@@ -8,18 +8,11 @@ from .models import Registration
 
 
 def lock_event(event_id):
-    """
-    Serialize booking operations for the same event.
-
-    PostgreSQL uses SELECT FOR UPDATE.
-    SQLite obtains a write lock before reading the seat count.
-    """
-    if connection.vendor == "sqlite":
-        Event.objects.filter(pk=event_id).update(
-            updated_at=timezone.now()
-        )
-
-    return Event.objects.select_for_update().get(pk=event_id)
+    """Obtain a SQLite write lock before checking event capacity."""
+    Event.objects.filter(pk=event_id).update(
+        updated_at=timezone.now()
+    )
+    return Event.objects.get(pk=event_id)
 
 
 def confirmed_count(event):
