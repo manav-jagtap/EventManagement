@@ -426,13 +426,14 @@ For a real production system with permanent user data, the database can be migra
 
 EventHub currently includes the complete attendee registration flow, organizer event management, automatic waitlisting, QR ticketing, ticket verification, attendee check-in, organizer analytics, Django Admin integration, automated booking tests, GitHub version control, and Render deployment.
 
+
+**Live Application:** [https://eventmanagement-8ndb.onrender.com](https://eventmanagement-8ndb.onrender.com)
+
 ---
 
 ## Author
 
 **Manav Jagtap**  
 B.Sc. Computer Science
-
-GitHub: [manav-jagtap](https://github.com/manav-jagtap)
 
 If you find the project useful, consider giving it a star on GitHub.
