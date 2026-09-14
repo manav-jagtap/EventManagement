@@ -9,6 +9,11 @@ EventHub is a Django-based event management platform for attendees, organizers, 
 
 Attendees can discover events, register for available seats, join a waitlist when an event is full, manage bookings, and access QR-based digital tickets. Organizers can create and manage events, verify tickets, check attendees in, and monitor event performance through analytics.
 
+## Live Demo
+
+**[Open EventHub Live](https://eventmanagement-8ndb.onrender.com)**
+
+
 ---
 
 ## Key Features
